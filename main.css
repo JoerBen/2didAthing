@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@900&family=Press+Start+2P&family=Roboto:wght@400;500;700;900&display=swap");
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "Bebas Neue", cursive;
+}
+
+html {
+    background-color: white;
+}
+
+a {
+    transition: color 0.25s ease-in-out;
+}
+
+a:hover {
+    color: white;
+}
+
+#info {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    color: white;
+    text-decoration: none;
+}
+
+.navigation {
+    position: fixed;
+    width: 8vw;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+.navigation a {
+    position: fixed;
+    right: 20px;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 5vh;
+}
+
+.actorsLink {
+    bottom: 5vh;
+    color: white;
+}
+
+.galleryLink {
+    bottom: 16.25vh;
+    color: white;
+}
+
+.influencersLink {
+    bottom: 27.5vh;
+    color: white;
+}
+
+.magazineLink {
+    bottom: 38.75vh;
+    color: white;
+}
+
+.shopLink {
+    bottom: 50vh;
+    color: white;
+}
+
+.socialLink {
+    bottom: 61.25vh;
+    color: white;
+}
+
+.travelLink {
+    bottom: 72.5vh;
+    color: white;
+}
+
+.mediaLink {
+    bottom: 83.75vh;
+    color: white;
+}
+
+.sevenPx {
+    position: fixed;
+    width: 7vw;
+    top: 0;
+    bottom: 0;
+    right: 8vw;
+    -webkit-backdrop-filter: blur(7px);
+    backdrop-filter: blur(7px);
+}
+
+.sixPx {
+    position: fixed;
+    width: 6vw;
+    top: 0;
+    bottom: 0;
+    right: 15vw;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.fivePx {
+    position: fixed;
+    width: 5vw;
+    top: 0;
+    bottom: 0;
+    right: 20vw;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+.fourPx {
+    position: fixed;
+    width: 4vw;
+    top: 0;
+    bottom: 0;
+    right: 24vw;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.threePx {
+    position: fixed;
+    width: 3vw;
+    top: 0;
+    bottom: 0;
+    right: 27vw;
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+}
+
+.twoPx {
+    position: fixed;
+    width: 2vw;
+    top: 0;
+    bottom: 0;
+    right: 29vw;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+.onePx {
+    position: fixed;
+    width: 5vw;
+    top: 0;
+    bottom: 0;
+    right: 31vw;
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+}
+
+.audio {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+}
+
+.root.lil-gui {
+    display: none;
+}
+
+.title {
+    display: none;
+}
