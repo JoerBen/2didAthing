@@ -33,4 +33,4 @@ requied:
 // nakonec kdyz kliknes na link nebo jakejkoli soubor ctrl klik tak te to do nej da
 // a kdyz vyberes jakykoli slovo nebo podtrzeny slovo tak ti to ukaze napovedu zarovku a is ok
 
-prdel
+prdel 2
