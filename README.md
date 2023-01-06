@@ -1,9 +1,11 @@
 # 2media
+
 2media official website
 
-podstranky 
+podstranky
 predmety
-memoryTest 
-refractive 
-onHover 
+https://threejs.org/manual/#en/primitives
+memoryTest
+refractive
+onHover
 sunCurrentTime - Date.now
