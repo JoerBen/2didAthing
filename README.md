@@ -4,11 +4,12 @@
 
 podstranky
 predmety
+https://threejs.org/examples/?q=raycas#webgl_interactive_cubes
 https://threejs.org/manual/#en/primitives
+https://threejs.org/examples/?q=obj#webgl_loader_obj_mtl
 ParrotBitch
 https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html
 memoryTest
-refractive
 onHover
 sunCurrentTime - Date.now
 
