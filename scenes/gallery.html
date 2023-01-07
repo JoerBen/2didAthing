@@ -80,7 +80,7 @@
         stats = new Stats();
         document.body.appendChild(stats.dom);
 
-        //objects
+        // camera
 
         camera = new THREE.PerspectiveCamera(
           90,
@@ -92,6 +92,8 @@
 
         scene = new THREE.Scene();
         scene.rotation.y = 0.5; // avoid flying objects occluding the sun
+
+        // hdri
 
         new RGBELoader()
           .setPath("../assets/textures/")
@@ -105,14 +107,14 @@
             }
           );
 
-        //
+        // cubeRenderCamera
 
         cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256);
         cubeRenderTarget.texture.type = THREE.HalfFloatType;
 
         cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
 
-        //
+        // objects
 
         material = new THREE.MeshStandardMaterial({
           envMap: cubeRenderTarget.texture,
@@ -182,8 +184,6 @@
           material2
         );
         scene.add(sextahedron);
-
-        //
       }
 
       function onWindowResized() {
@@ -197,6 +197,8 @@
       }
 
       function animation(msTime) {
+        // rotating objects
+
         const time = msTime / 1000;
 
         cube.position.x = Math.cos(time) * 30;
@@ -255,6 +257,8 @@
         sextahedron.rotation.x += 0.02;
         sextahedron.rotation.y += 0.03;
 
+        // fps update
+
         cubeCamera.update(renderer, scene);
 
         renderer.render(scene, camera);
@@ -272,10 +276,7 @@
       var audio = document.getElementById("backgroundMusic");
       audio.volume = 0.1;
     </script>
-    <!--
-    <div class="fivePx"></div>
-    <div class="sixPx"></div>
-    <div class="sevenPx"></div>-->
+
     <div class="navigation">
       <a href="/2media/scenes/media.html" class="mediaLink"> 2media </a>
       <a href="/2media/scenes/actors.html" class="actorsLink"> 2act </a>
