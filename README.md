@@ -13,6 +13,8 @@ memoryTest
 onHover
 sunCurrentTime - Date.now
 
+https://henryheffernan.com/
+
 so
 requied:
 // prettier extension
@@ -36,3 +38,10 @@ requied:
 
 prdel 2
 https://prod.liveshare.vsengsaas.visualstudio.com/join?2010F5C90A48FAF45368C411F1BA0EA9BCFE
+
+https://sirxemic.github.io/jquery.ripples/
+
+// IFRAME
+
+https://codesandbox.io/s/interactive-spline-scene-live-html-f79ucc?file=/src/index.js:0-315
+https://codesandbox.io/s/mixing-html-and-webgl-w-occlusion-9keg6?file=/package.json
