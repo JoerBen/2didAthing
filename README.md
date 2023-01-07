@@ -35,5 +35,4 @@ requied:
 // a kdyz vyberes jakykoli slovo nebo podtrzeny slovo tak ti to ukaze napovedu zarovku a is ok
 
 prdel 2
-
-https://prod.liveshare.vsengsaas.visualstudio.com/join?8788B883F46CB426B32BA336EFAD2444582F
+https://prod.liveshare.vsengsaas.visualstudio.com/join?2010F5C90A48FAF45368C411F1BA0EA9BCFE
