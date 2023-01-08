@@ -141,7 +141,7 @@
         scene.add(sphere);
 
         const material2 = new THREE.MeshStandardMaterial({
-          roughness: 0.1,
+          roughness: 0.05,
           metalness: 0,
         });
 
@@ -272,8 +272,8 @@
 
         // fps update
 
-        camera.position.x += (mouseX - camera.position.x) * 0.0002;
-        camera.position.y += (-mouseY - camera.position.y) * 0.0002;
+        camera.position.x += (mouseX - camera.position.x) * 0.01;
+        camera.position.y += (-mouseY - camera.position.y) * 0.02;
 
         camera.lookAt(scene.position);
 
