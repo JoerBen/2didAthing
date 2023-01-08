@@ -272,8 +272,8 @@
 
         // fps update
 
-        camera.position.x += (mouseX - camera.position.x) * 0.01;
-        camera.position.y += (-mouseY - camera.position.y) * 0.02;
+        camera.position.x += (mouseX / 5 - camera.position.x) * 0.01;
+        camera.position.y += (-mouseY / 5 - camera.position.y) * 0.02;
 
         camera.lookAt(scene.position);
 
@@ -303,7 +303,12 @@
         2influence
       </a>
       <a href="/2media/scenes/magazine.html" class="magazineLink"> 2read </a>
-      <a href="/2media/scenes/shop.html" class="shopLink"> 2shop </a>
+      <a
+        href="/2media/scenes/WebGL-Fluid-Simulation-master/index.html"
+        class="shopLink"
+      >
+        2shop
+      </a>
       <a href="/2media/scenes/social.html" class="socialLink"> 2socialize </a>
       <a href="/2media/scenes/travel.html" class="travelLink"> 2travel </a>
     </div>
