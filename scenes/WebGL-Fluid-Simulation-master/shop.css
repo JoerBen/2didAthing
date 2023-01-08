@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@900&family=Press+Start+2P&family=Roboto:wght@400;500;700;900&display=swap");
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Bebas Neue", cursive;
+}
+.itemGrid {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  background: rgba(0, 0, 0, 0.7);
+  width: 100vw;
+  height: 100vh;
+}
+.gridItem {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 20px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 15px;
+  margin: 0.5em;
+}
