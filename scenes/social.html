@@ -7,7 +7,7 @@
       name="viewport"
       content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
-    <link type="text/css" rel="stylesheet" href="/2media/main.css" />
+    <link type="text/css" rel="stylesheet" href="../main.css" />
   </head>
   <body>
     <div id="container"></div>
@@ -29,7 +29,7 @@
       {
         "imports": {
           "three": "https://threejs.org/build/three.module.js",
-          "three/addons/": "https://threejs.org/jsm/"
+          "three/addons/": "https://threejs.org/examples/jsm/"
         }
       }
     </script>
@@ -98,7 +98,7 @@
 
         const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
-          "/2media/assets/textures/hardwood2_diffuse.jpg",
+          "../assets/textures/hardwood2_diffuse.jpg",
           function (map) {
             map.wrapS = THREE.RepeatWrapping;
             map.wrapT = THREE.RepeatWrapping;
@@ -128,15 +128,15 @@
         // skybox
 
         const cubeTextureLoader = new THREE.CubeTextureLoader();
-        cubeTextureLoader.setPath("/2media/");
+        cubeTextureLoader.setPath("../assets/textures/Standard-Cube-Map/");
 
         const cubeTexture = cubeTextureLoader.load([
-          "posx.jpg",
-          "negx.jpg",
-          "posy.jpg",
-          "negy.jpg",
-          "posz.jpg",
-          "negz.jpg",
+          "px.png",
+          "nx.png",
+          "py.png",
+          "ny.png",
+          "pz.png",
+          "nz.png",
         ]);
 
         scene.background = cubeTexture;
