@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>three.js - water</title>
+    <title>three.js webgl - interactive cubes</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
     <link type="text/css" rel="stylesheet" href="../main.css" />
+    <style>
+      body {
+        background-color: #f0f0f0;
+        color: #444;
+      }
+      a {
+        color: #08f;
+      }
+    </style>
   </head>
   <body>
-    <div id="container"></div>
     <div id="info">
-      <a href="https://threejs.org" target="_blank" rel="noopener noreferrer"
-        >three.js</a
-      >
-      - water
+      <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>
+      webgl - interactive cubes
     </div>
 
     <!-- Import maps polyfill -->
@@ -37,158 +43,72 @@
     <script type="module">
       import * as THREE from "three";
 
-      import { GUI } from "three/addons/libs/lil-gui.module.min.js";
-      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-      import { Water } from "three/addons/objects/Water2.js";
+      import Stats from "three/addons/libs/stats.module.js";
 
-      let scene, camera, clock, renderer, water;
+      let container, stats;
+      let camera, scene, raycaster, renderer;
 
-      let torusKnot;
+      let INTERSECTED;
+      let theta = 0;
 
-      const params = {
-        color: "#ffffff",
-        scale: 4,
-        flowX: 1,
-        flowY: 1,
-      };
+      const pointer = new THREE.Vector2();
+      const radius = 100;
 
       init();
       animate();
 
       function init() {
-        // scene
-
-        scene = new THREE.Scene();
-
-        // camera
+        container = document.createElement("div");
+        document.body.appendChild(container);
 
         camera = new THREE.PerspectiveCamera(
-          45,
+          70,
           window.innerWidth / window.innerHeight,
-          0.1,
-          200
-        );
-        camera.position.set(-15, 7, 15);
-        camera.lookAt(scene.position);
-
-        // clock
-
-        clock = new THREE.Clock();
-
-        // mesh
-
-        const torusKnotGeometry = new THREE.TorusKnotGeometry(3, 1, 256, 32);
-        const torusKnotMaterial = new THREE.MeshNormalMaterial();
-
-        torusKnot = new THREE.Mesh(torusKnotGeometry, torusKnotMaterial);
-        torusKnot.position.y = 4;
-        torusKnot.scale.set(0.5, 0.5, 0.5);
-        scene.add(torusKnot);
-
-        // ground
-
-        const groundGeometry = new THREE.PlaneGeometry(20, 20);
-        const groundMaterial = new THREE.MeshStandardMaterial({
-          roughness: 0.8,
-          metalness: 0.4,
-        });
-        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        ground.rotation.x = Math.PI * -0.5;
-        scene.add(ground);
-
-        const textureLoader = new THREE.TextureLoader();
-        textureLoader.load(
-          "../assets/textures/hardwood2_diffuse.jpg",
-          function (map) {
-            map.wrapS = THREE.RepeatWrapping;
-            map.wrapT = THREE.RepeatWrapping;
-            map.anisotropy = 16;
-            map.repeat.set(4, 4);
-            groundMaterial.map = map;
-            groundMaterial.needsUpdate = true;
-          }
+          1,
+          10000
         );
 
-        // water
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf0f0f0);
 
-        const waterGeometry = new THREE.PlaneGeometry(20, 20);
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(1, 1, 1).normalize();
+        scene.add(light);
 
-        water = new Water(waterGeometry, {
-          color: params.color,
-          scale: params.scale,
-          flowDirection: new THREE.Vector2(params.flowX, params.flowY),
-          textureWidth: 1024,
-          textureHeight: 1024,
-        });
+        const geometry = new THREE.BoxGeometry(20, 20, 20);
 
-        water.position.y = 1;
-        water.rotation.x = Math.PI * -0.5;
-        scene.add(water);
+        for (let i = 0; i < 2000; i++) {
+          const object = new THREE.Mesh(
+            geometry,
+            new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff })
+          );
 
-        // skybox
+          object.position.x = Math.random() * 800 - 400;
+          object.position.y = Math.random() * 800 - 400;
+          object.position.z = Math.random() * 800 - 400;
 
-        const cubeTextureLoader = new THREE.CubeTextureLoader();
-        cubeTextureLoader.setPath("../assets/textures/Standard-Cube-Map/");
+          object.rotation.x = Math.random() * 2 * Math.PI;
+          object.rotation.y = Math.random() * 2 * Math.PI;
+          object.rotation.z = Math.random() * 2 * Math.PI;
 
-        const cubeTexture = cubeTextureLoader.load([
-          "px.png",
-          "nx.png",
-          "py.png",
-          "ny.png",
-          "pz.png",
-          "nz.png",
-        ]);
+          object.scale.x = Math.random() + 0.5;
+          object.scale.y = Math.random() + 0.5;
+          object.scale.z = Math.random() + 0.5;
 
-        scene.background = cubeTexture;
+          scene.add(object);
+        }
 
-        // light
+        raycaster = new THREE.Raycaster();
 
-        const ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
-        scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
-        directionalLight.position.set(-1, 1, 1);
-        scene.add(directionalLight);
-
-        // renderer
-
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer = new THREE.WebGLRenderer();
         renderer.setPixelRatio(window.devicePixelRatio);
-        document.body.appendChild(renderer.domElement);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
 
-        // gui
+        stats = new Stats();
+        container.appendChild(stats.dom);
 
-        const gui = new GUI();
-
-        gui.addColor(params, "color").onChange(function (value) {
-          water.material.uniforms["color"].value.set(value);
-        });
-        gui.add(params, "scale", 1, 10).onChange(function (value) {
-          water.material.uniforms["config"].value.w = value;
-        });
-        gui
-          .add(params, "flowX", -1, 1)
-          .step(0.01)
-          .onChange(function (value) {
-            water.material.uniforms["flowDirection"].value.x = value;
-            water.material.uniforms["flowDirection"].value.normalize();
-          });
-        gui
-          .add(params, "flowY", -1, 1)
-          .step(0.01)
-          .onChange(function (value) {
-            water.material.uniforms["flowDirection"].value.y = value;
-            water.material.uniforms["flowDirection"].value.normalize();
-          });
-
-        gui.open();
-
-        //
-
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.minDistance = 5;
-        controls.maxDistance = 50;
+        document.addEventListener("mousemove", onPointerMove);
 
         //
 
@@ -198,20 +118,55 @@
       function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
+
         renderer.setSize(window.innerWidth, window.innerHeight);
       }
+
+      function onPointerMove(event) {
+        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      }
+
+      //
 
       function animate() {
         requestAnimationFrame(animate);
 
         render();
+        stats.update();
       }
 
       function render() {
-        const delta = clock.getDelta();
+        theta += 0.1;
 
-        torusKnot.rotation.x += delta;
-        torusKnot.rotation.y += delta * 0.5;
+        camera.position.x = radius * Math.sin(THREE.MathUtils.degToRad(theta));
+        camera.position.y = radius * Math.sin(THREE.MathUtils.degToRad(theta));
+        camera.position.z = radius * Math.cos(THREE.MathUtils.degToRad(theta));
+        camera.lookAt(scene.position);
+
+        camera.updateMatrixWorld();
+
+        // find intersections
+
+        raycaster.setFromCamera(pointer, camera);
+
+        const intersects = raycaster.intersectObjects(scene.children, false);
+
+        if (intersects.length > 0) {
+          if (INTERSECTED != intersects[0].object) {
+            if (INTERSECTED)
+              INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+
+            INTERSECTED = intersects[0].object;
+            INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+            INTERSECTED.material.emissive.setHex(0xff0000);
+          }
+        } else {
+          if (INTERSECTED)
+            INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+
+          INTERSECTED = null;
+        }
 
         renderer.render(scene, camera);
       }
