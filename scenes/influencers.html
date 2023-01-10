@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>2media</title>
+    <title>three.js - webgl memory test I</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -10,14 +10,19 @@
     <link type="text/css" rel="stylesheet" href="/2media/main.css" />
     <style>
       body {
-        touch-action: none;
+        background-color: #fff;
+        color: #000;
+      }
+      a {
+        color: #08f;
       }
     </style>
   </head>
 
   <body>
     <div id="info">
-      <a href="https://threejs.org" target="_blank" rel="noopener">2me</a>
+      <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>
+      - memory test I
     </div>
 
     <!-- Import maps polyfill -->
@@ -39,244 +44,89 @@
     <script type="module">
       import * as THREE from "three";
 
-      import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
-
-      import { GUI } from "three/addons/libs/lil-gui.module.min.js";
-      import Stats from "three/addons/libs/stats.module.js";
-
-      // declarations
-
-      let camera, scene, renderer, stats;
-      let cube,
-        sphere,
-        torus,
-        tetrahedron,
-        dodecahedron,
-        octahedron,
-        donut,
-        pentahedron,
-        sextahedron,
-        material;
-
-      let cubeCamera, cubeRenderTarget;
+      let camera, scene, renderer;
 
       init();
-
-      //init
+      animate();
 
       function init() {
-        //scope
-
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setAnimationLoop(animation);
-        renderer.outputEncoding = THREE.sRGBEncoding;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        document.body.appendChild(renderer.domElement);
-
-        window.addEventListener("resize", onWindowResized);
-
-        stats = new Stats();
-        document.body.appendChild(stats.dom);
-
-        // camera
+        const container = document.createElement("div");
+        document.body.appendChild(container);
 
         camera = new THREE.PerspectiveCamera(
-          90,
+          60,
           window.innerWidth / window.innerHeight,
           1,
-          1000
+          10000
         );
-        camera.position.z = 70;
+        camera.position.z = 200;
 
         scene = new THREE.Scene();
-        scene.rotation.y = 0.5; // avoid flying objects occluding the sun
+        scene.background = new THREE.Color(0xffffff);
 
-        // hdri
-
-        new RGBELoader()
-          .setPath("../assets/textures/")
-          .load(
-            "kloofendal_48d_partly_cloudy_puresky_1k.hdr",
-            function (texture) {
-              texture.mapping = THREE.EquirectangularReflectionMapping;
-
-              scene.background = texture;
-              scene.environment = texture;
-            }
-          );
-
-        // cubeRenderCamera
-
-        cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256);
-        cubeRenderTarget.texture.type = THREE.HalfFloatType;
-
-        cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
-
-        // objects
-
-        material = new THREE.MeshStandardMaterial({
-          envMap: cubeRenderTarget.texture,
-          roughness: 0.05,
-          metalness: 1,
-        });
-
-        const gui = new GUI();
-        gui.add(material, "roughness", 0, 1);
-        gui.add(material, "metalness", 0, 1);
-        gui.add(renderer, "toneMappingExposure", 0, 2).name("exposure");
-
-        const radius = 7.5;
-
-        sphere = new THREE.Mesh(new THREE.IcosahedronGeometry(20, 8), material);
-        scene.add(sphere);
-
-        const material2 = new THREE.MeshStandardMaterial({
-          roughness: 0.1,
-          metalness: 0,
-        });
-
-        cube = new THREE.Mesh(
-          new THREE.BoxGeometry(radius, radius, radius),
-          material2
-        );
-        scene.add(cube);
-
-        pentahedron = new THREE.Mesh(
-          new THREE.TorusGeometry(radius - 3, 3, 15, 20),
-          material2
-        );
-        scene.add(pentahedron);
-
-        tetrahedron = new THREE.Mesh(
-          new THREE.TetrahedronGeometry(radius),
-          material2
-        );
-        scene.add(tetrahedron);
-
-        dodecahedron = new THREE.Mesh(
-          new THREE.DodecahedronGeometry(radius),
-          material2
-        );
-        scene.add(dodecahedron);
-
-        donut = new THREE.Mesh(
-          new THREE.IcosahedronGeometry(radius, 8),
-          material2
-        );
-        scene.add(donut);
-
-        octahedron = new THREE.Mesh(
-          new THREE.OctahedronGeometry(radius),
-          material2
-        );
-        scene.add(octahedron);
-
-        torus = new THREE.Mesh(
-          new THREE.IcosahedronGeometry(radius, 8),
-          material2
-        );
-        scene.add(torus);
-
-        sextahedron = new THREE.Mesh(
-          new THREE.IcosahedronGeometry(radius),
-          material2
-        );
-        scene.add(sextahedron);
-      }
-
-      function onWindowResized() {
-        windowHalfX = window.innerWidth / 2;
-        windowHalfY = window.innerHeight / 2;
-
+        renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
-
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
+        container.appendChild(renderer.domElement);
       }
 
-      function animation(msTime) {
-        // rotating objects
+      function createImage() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 256;
+        canvas.height = 256;
 
-        const time = msTime / 1000;
+        const context = canvas.getContext("2d");
+        context.fillStyle =
+          "rgb(" +
+          Math.floor(Math.random() * 256) +
+          "," +
+          Math.floor(Math.random() * 256) +
+          "," +
+          Math.floor(Math.random() * 256) +
+          ")";
+        context.fillRect(0, 0, 256, 256);
 
-        tetrahedron.position.x = Math.cos(time) * 20;
-        tetrahedron.position.y = Math.sin(time) * 20;
-        tetrahedron.position.z = Math.sin(time) * 20;
+        return canvas;
+      }
 
-        tetrahedron.rotation.x += 0.02;
-        tetrahedron.rotation.y += 0.03;
+      //
 
-        cube.position.x = Math.cos(time + 30) * 30;
-        cube.position.y = Math.sin(time + 30) * 30;
-        cube.position.z = Math.sin(time + 30) * 30;
+      function animate() {
+        requestAnimationFrame(animate);
 
-        cube.rotation.x += 0.02;
-        cube.rotation.y += 0.03;
+        render();
+      }
 
-        pentahedron.position.x = Math.cos(time + 60) * 40;
-        pentahedron.position.y = Math.sin(time + 60) * 40;
-        pentahedron.position.z = Math.sin(time + 60) * 40;
+      function render() {
+        const geometry = new THREE.SphereGeometry(
+          50,
+          Math.random() * 64,
+          Math.random() * 32
+        );
 
-        pentahedron.rotation.x += 0.02;
-        pentahedron.rotation.y += 0.03;
+        const texture = new THREE.CanvasTexture(createImage());
 
-        octahedron.position.x = Math.cos(time + 90) * 50;
-        octahedron.position.y = Math.sin(time + 90) * 50;
-        octahedron.position.z = Math.sin(time + 90) * 50;
+        const material = new THREE.MeshBasicMaterial({
+          map: texture,
+          wireframe: true,
+        });
 
-        octahedron.rotation.x += 0.02;
-        octahedron.rotation.y += 0.03;
+        const mesh = new THREE.Mesh(geometry, material);
 
-        dodecahedron.position.x = Math.sin(time + 15) * 60;
-        dodecahedron.position.y = Math.cos(time + 15) * 60;
-        dodecahedron.position.z = Math.sin(time + 15) * 60;
-
-        dodecahedron.rotation.x += 0.02;
-        dodecahedron.rotation.y += 0.03;
-
-        sextahedron.position.x = Math.cos(time + 15 + 30) * 70;
-        sextahedron.position.y = Math.cos(time + 15 + 30) * 70;
-        sextahedron.position.z = Math.sin(time + 15 + 30) * 70;
-
-        sextahedron.rotation.x += 0.02;
-        sextahedron.rotation.y += 0.03;
-
-        pentahedron.position.x = Math.sin(time + 15 + 60) * 30;
-        pentahedron.position.y = Math.cos(time + 15 + 60) * 30;
-        pentahedron.position.z = Math.sin(time + 15 + 60) * 30;
-
-        pentahedron.rotation.x += 0.02;
-        pentahedron.rotation.y += 0.03;
-
-        sextahedron.position.x = Math.cos(time + 15 + 90) * 30;
-        sextahedron.position.y = Math.cos(time + 15 + 90) * 30;
-        sextahedron.position.z = Math.sin(time + 15 + 90) * 30;
-
-        sextahedron.rotation.x += 0.02;
-        sextahedron.rotation.y += 0.03;
-
-        // fps update
-
-        cubeCamera.update(renderer, scene);
+        scene.add(mesh);
 
         renderer.render(scene, camera);
 
-        stats.update();
+        scene.remove(mesh);
+
+        // clean up
+
+        geometry.dispose();
+        material.dispose();
+        texture.dispose();
       }
     </script>
-    <audio autoplay id="backgroundMusic">
-      <source
-        src="https://cdn.glitch.global/00e5bcb4-b69b-4f01-a1ee-7b69eed72aaa/backgroundMusic.mp3?v=1672406717330"
-      />
-    </audio>
-
-    <script>
-      var audio = document.getElementById("backgroundMusic");
-      audio.volume = 0.1;
-    </script>
-
+    <div class="influencersBlur"></div>
     <div class="navigation">
       <a href="/2media/scenes/media.html" class="mediaLink"> 2media </a>
       <a href="/2media/scenes/actors.html" class="actorsLink"> 2act </a>
@@ -285,9 +135,20 @@
         2influence
       </a>
       <a href="/2media/scenes/magazine.html" class="magazineLink"> 2read </a>
-      <a href="/2media/scenes/shop.html" class="shopLink"> 2shop </a>
+      <a
+        href="/2media/scenes/WebGL-Fluid-Simulation-master/index.html"
+        class="shopLink"
+      >
+        2shop
+      </a>
       <a href="/2media/scenes/social.html" class="socialLink"> 2socialize </a>
       <a href="/2media/scenes/travel.html" class="travelLink"> 2travel </a>
+      <a
+        href="/2media/scenes/threejs-multiplayer/src/index.html"
+        class="multiplayerLink"
+      >
+        2play
+      </a>
     </div>
   </body>
 </html>

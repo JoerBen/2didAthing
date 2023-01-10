@@ -141,6 +141,14 @@ html {
   backdrop-filter: blur(1px);
 }
 
+.influencersBlur {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+}
+
 .audio {
   position: fixed;
   bottom: 20px;
