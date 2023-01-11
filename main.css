@@ -38,7 +38,7 @@ html {
 }
 
 .navigation a:hover {
-  color: rgba(100, 100, 100, 0.7);
+  color: rgba(255, 0, 0, 0.7);
 }
 
 .actorsLink {
@@ -66,6 +66,24 @@ html {
 }
 
 .gameLink {
+}
+
+.homeLink {
+  z-index: 100;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 2em;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 5vh;
+  text-align: right;
+  color: rgba(255, 255, 255, 1);
+  transition: color 1s ease-in-out;
+}
+
+.homeLink:hover {
+  color: rgba(255, 0, 0, 0.7);
 }
 
 .sevenPx {
