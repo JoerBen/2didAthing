@@ -115,7 +115,7 @@
           element.appendChild(sceneElement);
 
           const descriptionElement = document.createElement("div");
-          descriptionElement.innerText = "Scene " + (i + 1);
+          descriptionElement.innerText = "Produkt " + (i + 1);
           element.appendChild(descriptionElement);
 
           // the element that represents the area we want to render the scene
@@ -181,7 +181,7 @@
 
         canvas.style.transform = `translateY(${window.scrollY}px)`;
 
-        renderer.setClearColor(0x232323);
+        renderer.setClearColor(0x1a1a1a);
         renderer.setScissorTest(false);
         renderer.clear();
 

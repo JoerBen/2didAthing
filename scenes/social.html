@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>three.js webgl - interactive cubes</title>
+    <title>three.js webgl - animation - keyframes</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -10,19 +10,18 @@
     <link type="text/css" rel="stylesheet" href="../main.css" />
     <style>
       body {
-        background-color: #f0f0f0;
-        color: #444;
+        background-color: #bfe3dd;
+        color: #000;
       }
+
       a {
-        color: #08f;
+        color: #2983ff;
       }
     </style>
   </head>
+
   <body>
-    <div id="info">
-      <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>
-      webgl - interactive cubes
-    </div>
+    <div id="container"></div>
 
     <!-- Import maps polyfill -->
     <!-- Remove this when import maps will be widely supported -->
@@ -45,131 +44,94 @@
 
       import Stats from "three/addons/libs/stats.module.js";
 
-      let container, stats;
-      let camera, scene, raycaster, renderer;
+      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+      import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
-      let INTERSECTED;
-      let theta = 0;
+      import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+      import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
-      const pointer = new THREE.Vector2();
-      const radius = 100;
+      let mixer;
 
-      init();
-      animate();
+      const clock = new THREE.Clock();
+      const container = document.getElementById("container");
 
-      function init() {
-        container = document.createElement("div");
-        document.body.appendChild(container);
+      const stats = new Stats();
+      container.appendChild(stats.dom);
 
-        camera = new THREE.PerspectiveCamera(
-          70,
-          window.innerWidth / window.innerHeight,
-          1,
-          10000
-        );
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      container.appendChild(renderer.domElement);
 
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf0f0f0);
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
 
-        const light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(1, 1, 1).normalize();
-        scene.add(light);
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xbfe3dd);
+      scene.environment = pmremGenerator.fromScene(
+        new RoomEnvironment(),
+        0.04
+      ).texture;
 
-        const geometry = new THREE.BoxGeometry(20, 20, 20);
+      const camera = new THREE.PerspectiveCamera(
+        40,
+        window.innerWidth / window.innerHeight,
+        1,
+        100
+      );
+      camera.position.set(5, 2, 8);
 
-        for (let i = 0; i < 2000; i++) {
-          const object = new THREE.Mesh(
-            geometry,
-            new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff })
-          );
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.target.set(0, 0.5, 0);
+      controls.update();
+      controls.enablePan = false;
+      controls.enableDamping = true;
 
-          object.position.x = Math.random() * 800 - 400;
-          object.position.y = Math.random() * 800 - 400;
-          object.position.z = Math.random() * 800 - 400;
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath("../assets/loaders/draco/");
 
-          object.rotation.x = Math.random() * 2 * Math.PI;
-          object.rotation.y = Math.random() * 2 * Math.PI;
-          object.rotation.z = Math.random() * 2 * Math.PI;
+      const loader = new GLTFLoader();
+      loader.setDRACOLoader(dracoLoader);
+      loader.load(
+        "../assets/objects/LittlestTokyo.glb",
+        function (gltf) {
+          const model = gltf.scene;
+          model.position.set(1, 1, 0);
+          model.scale.set(0.01, 0.01, 0.01);
+          scene.add(model);
 
-          object.scale.x = Math.random() + 0.5;
-          object.scale.y = Math.random() + 0.5;
-          object.scale.z = Math.random() + 0.5;
+          mixer = new THREE.AnimationMixer(model);
+          mixer.clipAction(gltf.animations[0]).play();
 
-          scene.add(object);
+          animate();
+        },
+        undefined,
+        function (e) {
+          console.error(e);
         }
+      );
 
-        raycaster = new THREE.Raycaster();
-
-        renderer = new THREE.WebGLRenderer();
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        container.appendChild(renderer.domElement);
-
-        stats = new Stats();
-        container.appendChild(stats.dom);
-
-        document.addEventListener("mousemove", onPointerMove);
-
-        //
-
-        window.addEventListener("resize", onWindowResize);
-      }
-
-      function onWindowResize() {
+      window.onresize = function () {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
 
         renderer.setSize(window.innerWidth, window.innerHeight);
-      }
-
-      function onPointerMove(event) {
-        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-      }
-
-      //
+      };
 
       function animate() {
         requestAnimationFrame(animate);
 
-        render();
+        const delta = clock.getDelta();
+
+        mixer.update(delta);
+
+        controls.update();
+
         stats.update();
-      }
-
-      function render() {
-        theta += 0.1;
-
-        camera.position.x = radius * Math.sin(THREE.MathUtils.degToRad(theta));
-        camera.position.y = radius * Math.sin(THREE.MathUtils.degToRad(theta));
-        camera.position.z = radius * Math.cos(THREE.MathUtils.degToRad(theta));
-        camera.lookAt(scene.position);
-
-        camera.updateMatrixWorld();
-
-        // find intersections
-
-        raycaster.setFromCamera(pointer, camera);
-
-        const intersects = raycaster.intersectObjects(scene.children, false);
-
-        if (intersects.length > 0) {
-          if (INTERSECTED != intersects[0].object) {
-            if (INTERSECTED)
-              INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-
-            INTERSECTED = intersects[0].object;
-            INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-            INTERSECTED.material.emissive.setHex(0xff0000);
-          }
-        } else {
-          if (INTERSECTED)
-            INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-
-          INTERSECTED = null;
-        }
 
         renderer.render(scene, camera);
       }
     </script>
+    <a href="/2media/index.html" class="homeLink"> 2home </a>
   </body>
 </html>
