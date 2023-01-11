@@ -19,18 +19,20 @@ html {
 
 .navigation {
   position: fixed;
-  width: 8vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   top: 0;
   bottom: 0;
   right: 0;
+  padding: 2em;
 }
 
 .navigation a {
-  position: fixed;
-  right: 20px;
   text-decoration: none;
   font-weight: 900;
   font-size: 5vh;
+  text-align: right;
   color: rgba(255, 255, 255, 1);
   transition: color 1s ease-in-out;
 }
@@ -40,35 +42,27 @@ html {
 }
 
 .actorsLink {
-  bottom: 5vh;
 }
 
 .galleryLink {
-  bottom: 16.25vh;
 }
 
 .influencersLink {
-  bottom: 27.5vh;
 }
 
 .magazineLink {
-  bottom: 38.75vh;
 }
 
 .shopLink {
-  bottom: 50vh;
 }
 
 .socialLink {
-  bottom: 61.25vh;
 }
 
 .travelLink {
-  bottom: 72.5vh;
 }
 
 .mediaLink {
-  bottom: 83.75vh;
 }
 
 .sevenPx {
