@@ -1,24 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>2media</title>
+    <title>three.js webgl - materials - texture filtering</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
-    <link type="text/css" rel="stylesheet" href="/2media/main.css" />
+    <link type="text/css" rel="stylesheet" href="../main.css" />
     <style>
-      body {
-        touch-action: none;
+      .lbl {
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        position: absolute;
+        bottom: 0px;
+        z-index: 100;
+        text-shadow: #000 1px 1px 1px;
+        background-color: rgba(0, 0, 0, 0.85);
+        padding: 1em;
+      }
+      #lbl_left {
+        text-align: left;
+        left: 0px;
+      }
+      #lbl_right {
+        text-align: left;
+        right: 0px;
+      }
+
+      .g {
+        color: #aaa;
+      }
+      .c {
+        color: #fa0;
       }
     </style>
   </head>
 
   <body>
-    <div id="info">
-      <a href="https://threejs.org" target="_blank" rel="noopener">2me</a>
-    </div>
+    <a href="/2media/index.html" class="homeLink"> 2home </a>
 
     <!-- Import maps polyfill -->
     <!-- Remove this when import maps will be widely supported -->
@@ -39,255 +60,200 @@
     <script type="module">
       import * as THREE from "three";
 
-      import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
+      const SCREEN_WIDTH = window.innerWidth;
+      const SCREEN_HEIGHT = window.innerHeight;
 
-      import { GUI } from "three/addons/libs/lil-gui.module.min.js";
-      import Stats from "three/addons/libs/stats.module.js";
+      let container;
 
-      // declarations
+      let camera, scene, scene2, renderer;
 
-      let camera, scene, renderer, stats;
-      let cube,
-        sphere,
-        torus,
-        tetrahedron,
-        dodecahedron,
-        octahedron,
-        donut,
-        pentahedron,
-        sextahedron,
-        material;
+      let mouseX = 0,
+        mouseY = 0;
 
-      let cubeCamera, cubeRenderTarget;
+      const windowHalfX = window.innerWidth / 2;
+      const windowHalfY = window.innerHeight / 2;
 
       init();
-
-      //init
+      animate();
 
       function init() {
-        //scope
+        container = document.createElement("div");
+        document.body.appendChild(container);
+
+        camera = new THREE.PerspectiveCamera(
+          35,
+          SCREEN_WIDTH / SCREEN_HEIGHT,
+          1,
+          5000
+        );
+        camera.position.z = 1500;
+
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+        scene.fog = new THREE.Fog(0x000000, 1500, 4000);
+
+        scene2 = new THREE.Scene();
+        scene2.background = new THREE.Color(0x000000);
+        scene2.fog = new THREE.Fog(0x000000, 1500, 4000);
+
+        // GROUND
+
+        const imageCanvas = document.createElement("canvas");
+        const context = imageCanvas.getContext("2d");
+
+        imageCanvas.width = imageCanvas.height = 128;
+
+        context.fillStyle = "#444";
+        context.fillRect(0, 0, 128, 128);
+
+        context.fillStyle = "#fff";
+        context.fillRect(0, 0, 64, 64);
+        context.fillRect(64, 64, 64, 64);
+
+        const textureCanvas = new THREE.CanvasTexture(imageCanvas);
+        textureCanvas.repeat.set(1000, 1000);
+        textureCanvas.wrapS = THREE.RepeatWrapping;
+        textureCanvas.wrapT = THREE.RepeatWrapping;
+
+        const textureCanvas2 = textureCanvas.clone();
+        textureCanvas2.magFilter = THREE.NearestFilter;
+        textureCanvas2.minFilter = THREE.NearestFilter;
+
+        const materialCanvas = new THREE.MeshBasicMaterial({
+          map: textureCanvas,
+        });
+        const materialCanvas2 = new THREE.MeshBasicMaterial({
+          color: 0xffccaa,
+          map: textureCanvas2,
+        });
+
+        const geometry = new THREE.PlaneGeometry(100, 100);
+
+        const meshCanvas = new THREE.Mesh(geometry, materialCanvas);
+        meshCanvas.rotation.x = -Math.PI / 2;
+        meshCanvas.scale.set(1000, 1000, 1000);
+
+        const meshCanvas2 = new THREE.Mesh(geometry, materialCanvas2);
+        meshCanvas2.rotation.x = -Math.PI / 2;
+        meshCanvas2.scale.set(1000, 1000, 1000);
+
+        // PAINTING
+
+        const callbackPainting = function () {
+          const image = texturePainting.image;
+
+          texturePainting2.image = image;
+          texturePainting2.needsUpdate = true;
+
+          scene.add(meshCanvas);
+          scene2.add(meshCanvas2);
+
+          const geometry = new THREE.PlaneGeometry(100, 100);
+          const mesh = new THREE.Mesh(geometry, materialPainting);
+          const mesh2 = new THREE.Mesh(geometry, materialPainting2);
+
+          addPainting(scene, mesh);
+          addPainting(scene2, mesh2);
+
+          function addPainting(zscene, zmesh) {
+            zmesh.scale.x = image.width / 500;
+            zmesh.scale.y = image.height / 500;
+
+            zscene.add(zmesh);
+
+            const meshFrame = new THREE.Mesh(
+              geometry,
+              new THREE.MeshBasicMaterial({ color: 0x000000 })
+            );
+            meshFrame.position.z = -10.0;
+            meshFrame.scale.x = (1.1 * image.width) / 1000;
+            meshFrame.scale.y = (1.1 * image.height) / 1000;
+            zscene.add(meshFrame);
+
+            const meshShadow = new THREE.Mesh(
+              geometry,
+              new THREE.MeshBasicMaterial({
+                color: 0x000000,
+                opacity: 0.75,
+                transparent: true,
+              })
+            );
+            meshShadow.position.y = (-1.1 * image.height) / 2;
+            meshShadow.position.z = (-1.1 * image.height) / 2;
+            meshShadow.rotation.x = -Math.PI / 2;
+            meshShadow.scale.x = (1.1 * image.width) / 1000;
+            meshShadow.scale.y = (1.1 * image.height) / 1000;
+            zscene.add(meshShadow);
+
+            const floorHeight = (-1.117 * image.height) / 10;
+            meshCanvas.position.y = meshCanvas2.position.y = floorHeight;
+          }
+        };
+
+        const texturePainting = new THREE.TextureLoader().load(
+          "../assets/textures/15.png",
+          callbackPainting
+        );
+        const texturePainting2 = new THREE.Texture();
+        const materialPainting = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          map: texturePainting,
+        });
+        const materialPainting2 = new THREE.MeshBasicMaterial({
+          color: 0xffccaa,
+          map: texturePainting2,
+        });
+
+        texturePainting2.minFilter = texturePainting2.magFilter =
+          THREE.NearestFilter;
+        texturePainting.minFilter = texturePainting.magFilter =
+          THREE.LinearFilter;
+        texturePainting.mapping = THREE.UVMapping;
 
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setAnimationLoop(animation);
-        renderer.outputEncoding = THREE.sRGBEncoding;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        document.body.appendChild(renderer.domElement);
+        renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        renderer.autoClear = false;
 
-        window.addEventListener("resize", onWindowResized);
+        renderer.domElement.style.position = "relative";
+        container.appendChild(renderer.domElement);
 
-        stats = new Stats();
-        document.body.appendChild(stats.dom);
-
-        // camera
-
-        camera = new THREE.PerspectiveCamera(
-          90,
-          window.innerWidth / window.innerHeight,
-          1,
-          1000
-        );
-        camera.position.z = 70;
-
-        scene = new THREE.Scene();
-        scene.rotation.y = 0.5; // avoid flying objects occluding the sun
-
-        // hdri
-
-        new RGBELoader()
-          .setPath("../assets/textures/")
-          .load(
-            "kloofendal_48d_partly_cloudy_puresky_1k.hdr",
-            function (texture) {
-              texture.mapping = THREE.EquirectangularReflectionMapping;
-
-              scene.background = texture;
-              scene.environment = texture;
-            }
-          );
-
-        // cubeRenderCamera
-
-        cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256);
-        cubeRenderTarget.texture.type = THREE.HalfFloatType;
-
-        cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
-
-        // objects
-
-        material = new THREE.MeshStandardMaterial({
-          envMap: cubeRenderTarget.texture,
-          roughness: 0.05,
-          metalness: 1,
-        });
-
-        const gui = new GUI();
-        gui.add(material, "roughness", 0, 1);
-        gui.add(material, "metalness", 0, 1);
-        gui.add(renderer, "toneMappingExposure", 0, 2).name("exposure");
-
-        const radius = 7.5;
-
-        sphere = new THREE.Mesh(new THREE.IcosahedronGeometry(20, 8), material);
-        scene.add(sphere);
-
-        const material2 = new THREE.MeshStandardMaterial({
-          roughness: 0.1,
-          metalness: 0,
-        });
-
-        cube = new THREE.Mesh(
-          new THREE.BoxGeometry(radius, radius, radius),
-          material2
-        );
-        scene.add(cube);
-
-        pentahedron = new THREE.Mesh(
-          new THREE.TorusGeometry(radius - 3, 3, 15, 20),
-          material2
-        );
-        scene.add(pentahedron);
-
-        tetrahedron = new THREE.Mesh(
-          new THREE.TetrahedronGeometry(radius),
-          material2
-        );
-        scene.add(tetrahedron);
-
-        dodecahedron = new THREE.Mesh(
-          new THREE.DodecahedronGeometry(radius),
-          material2
-        );
-        scene.add(dodecahedron);
-
-        donut = new THREE.Mesh(
-          new THREE.IcosahedronGeometry(radius, 8),
-          material2
-        );
-        scene.add(donut);
-
-        octahedron = new THREE.Mesh(
-          new THREE.OctahedronGeometry(radius),
-          material2
-        );
-        scene.add(octahedron);
-
-        torus = new THREE.Mesh(
-          new THREE.IcosahedronGeometry(radius, 8),
-          material2
-        );
-        scene.add(torus);
-
-        sextahedron = new THREE.Mesh(
-          new THREE.IcosahedronGeometry(radius),
-          material2
-        );
-        scene.add(sextahedron);
+        document.addEventListener("mousemove", onDocumentMouseMove);
       }
 
-      function onWindowResized() {
-        windowHalfX = window.innerWidth / 2;
-        windowHalfY = window.innerHeight / 2;
-
-        renderer.setSize(window.innerWidth, window.innerHeight);
-
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
+      function onDocumentMouseMove(event) {
+        mouseX = event.clientX - windowHalfX;
+        mouseY = event.clientY - windowHalfY;
       }
 
-      function animation(msTime) {
-        // rotating objects
+      function animate() {
+        requestAnimationFrame(animate);
 
-        const time = msTime / 1000;
+        render();
+      }
 
-        cube.position.x = Math.cos(time) * 30;
-        cube.position.y = Math.sin(time) * 30;
-        cube.position.z = Math.sin(time) * 30;
+      function render() {
+        camera.position.x += (mouseX - camera.position.x) * 0.05;
+        camera.position.y += (-(mouseY - 200) - camera.position.y) * 0.05;
 
-        cube.rotation.x += 0.02;
-        cube.rotation.y += 0.03;
+        camera.lookAt(scene.position);
 
-        torus.position.x = Math.cos(time + 30) * 30;
-        torus.position.y = Math.sin(time + 30) * 30;
-        torus.position.z = Math.sin(time + 30) * 30;
+        renderer.clear();
+        renderer.setScissorTest(true);
 
-        torus.rotation.x += 0.02;
-        torus.rotation.y += 0.03;
-
-        tetrahedron.position.x = Math.cos(time + 60) * 30;
-        tetrahedron.position.y = Math.sin(time + 60) * 30;
-        tetrahedron.position.z = Math.sin(time + 60) * 30;
-
-        tetrahedron.rotation.x += 0.02;
-        tetrahedron.rotation.y += 0.03;
-
-        dodecahedron.position.x = Math.cos(time + 90) * 30;
-        dodecahedron.position.y = Math.sin(time + 90) * 30;
-        dodecahedron.position.z = Math.sin(time + 90) * 30;
-
-        dodecahedron.rotation.x += 0.02;
-        dodecahedron.rotation.y += 0.03;
-
-        donut.position.x = Math.sin(time + 15) * 30;
-        donut.position.y = Math.cos(time + 15) * 30;
-        donut.position.z = Math.sin(time + 15) * 30;
-
-        donut.rotation.x += 0.02;
-        donut.rotation.y += 0.03;
-
-        octahedron.position.x = Math.cos(time + 15 + 30) * 30;
-        octahedron.position.y = Math.cos(time + 15 + 30) * 30;
-        octahedron.position.z = Math.sin(time + 15 + 30) * 30;
-
-        octahedron.rotation.x += 0.02;
-        octahedron.rotation.y += 0.03;
-
-        pentahedron.position.x = Math.sin(time + 15 + 60) * 30;
-        pentahedron.position.y = Math.cos(time + 15 + 60) * 30;
-        pentahedron.position.z = Math.sin(time + 15 + 60) * 30;
-
-        pentahedron.rotation.x += 0.02;
-        pentahedron.rotation.y += 0.03;
-
-        sextahedron.position.x = Math.cos(time + 15 + 90) * 30;
-        sextahedron.position.y = Math.cos(time + 15 + 90) * 30;
-        sextahedron.position.z = Math.sin(time + 15 + 90) * 30;
-
-        sextahedron.rotation.x += 0.02;
-        sextahedron.rotation.y += 0.03;
-
-        // fps update
-
-        cubeCamera.update(renderer, scene);
-
+        renderer.setScissor(0, 0, SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT);
         renderer.render(scene, camera);
 
-        stats.update();
+        renderer.setScissor(
+          SCREEN_WIDTH / 2,
+          0,
+          SCREEN_WIDTH / 2 - 2,
+          SCREEN_HEIGHT
+        );
+        renderer.render(scene2, camera);
+
+        renderer.setScissorTest(false);
       }
     </script>
-    <audio autoplay id="backgroundMusic">
-      <source
-        src="https://cdn.glitch.global/00e5bcb4-b69b-4f01-a1ee-7b69eed72aaa/backgroundMusic.mp3?v=1672406717330"
-      />
-    </audio>
-
-    <script>
-      var audio = document.getElementById("backgroundMusic");
-      audio.volume = 0.1;
-    </script>
-
-    <div class="navigation">
-      <a href="/2media/scenes/media.html" class="mediaLink"> 2media </a>
-      <a href="/2media/scenes/actors.html" class="actorsLink"> 2act </a>
-      <a href="/2media/scenes/gallery.html" class="galleryLink"> 2art </a>
-      <a href="/2media/scenes/influencers.html" class="influencersLink">
-        2influence
-      </a>
-      <a href="/2media/scenes/magazine.html" class="magazineLink"> 2read </a>
-      <a href="/2media/scenes/shop.html" class="shopLink"> 2shop </a>
-      <a href="/2media/scenes/social.html" class="socialLink"> 2socialize </a>
-      <a href="/2media/scenes/travel.html" class="travelLink"> 2travel </a>
-    </div>
   </body>
 </html>
