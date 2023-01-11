@@ -31,8 +31,6 @@
     <script type="module">
       import * as THREE from "three";
 
-      import Stats from "three/addons/libs/stats.module.js";
-
       import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
       import { Octree } from "three/addons/math/Octree.js";
@@ -85,11 +83,6 @@
       renderer.outputEncoding = THREE.sRGBEncoding;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       container.appendChild(renderer.domElement);
-
-      const stats = new Stats();
-      stats.domElement.style.position = "absolute";
-      stats.domElement.style.top = "0px";
-      container.appendChild(stats.domElement);
 
       const GRAVITY = 30;
 
@@ -437,8 +430,6 @@
         }
 
         renderer.render(scene, camera);
-
-        stats.update();
 
         requestAnimationFrame(animate);
       }

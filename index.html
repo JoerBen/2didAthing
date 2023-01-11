@@ -38,11 +38,10 @@
       import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 
       import { GUI } from "three/addons/libs/lil-gui.module.min.js";
-      import Stats from "three/addons/libs/stats.module.js";
 
       // declarations
 
-      let camera, scene, renderer, stats;
+      let camera, scene, renderer;
       let cube,
         sphere,
         torus,
@@ -80,9 +79,6 @@
         document.addEventListener("mousemove", onDocumentMouseMove);
 
         window.addEventListener("resize", onWindowResized);
-
-        stats = new Stats();
-        document.body.appendChild(stats.dom);
 
         // camera
 
@@ -276,8 +272,6 @@
         cubeCamera.update(renderer, scene);
 
         renderer.render(scene, camera);
-
-        stats.update();
       }
     </script>
     <audio autoplay id="backgroundMusic">
@@ -292,7 +286,7 @@
     </script>
 
     <div class="navigation">
-      <a href="/2media/scenes/media.html" class="mediaLink"> 2media </a>
+      <a href="https://www.2media.cz/en/" class="mediaLink"> 2media </a>
       <a href="/2media/scenes/actors.html" class="actorsLink"> 2act </a>
       <a href="/2media/scenes/gallery.html" class="galleryLink"> 2art </a>
       <a

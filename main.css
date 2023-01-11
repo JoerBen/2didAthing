@@ -177,3 +177,26 @@ html {
 .title {
   display: none;
 }
+.socialNavigation {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding: 2em;
+}
+
+.socialNavigation a {
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 5vh;
+  text-align: left;
+  color: rgba(255, 255, 255, 1);
+  transition: color 1s ease-in-out;
+}
+
+.socialNavigation a:hover {
+  color: rgba(255, 0, 0, 0.7);
+}

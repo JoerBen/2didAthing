@@ -32,8 +32,6 @@
     <script type="module">
       import * as THREE from "three";
 
-      import Stats from "three/addons/libs/stats.module.js";
-
       import { FlyControls } from "three/addons/controls/FlyControls.js";
       import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
       import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
@@ -50,7 +48,7 @@
       let SCREEN_HEIGHT = window.innerHeight - MARGIN * 2;
       let SCREEN_WIDTH = window.innerWidth;
 
-      let camera, controls, scene, renderer, stats;
+      let camera, controls, scene, renderer;
       let geometry, meshPlanet, meshClouds, meshMoon;
       let dirLight;
 
@@ -240,9 +238,6 @@
 
         //
 
-        stats = new Stats();
-        document.body.appendChild(stats.dom);
-
         window.addEventListener("resize", onWindowResize);
 
         // postprocessing
@@ -271,7 +266,6 @@
         requestAnimationFrame(animate);
 
         render();
-        stats.update();
       }
 
       function render() {

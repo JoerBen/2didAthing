@@ -36,8 +36,6 @@
     <script type="module">
       import * as THREE from "three";
 
-      import Stats from "three/addons/libs/stats.module.js";
-
       import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
       import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -142,9 +140,6 @@
         controls.maxPolarAngle = Math.PI / 1.8;
         controls.target.set(0, 0.15, -0.2);
 
-        const stats = new Stats();
-        container.appendChild(stats.dom);
-
         renderer.setAnimationLoop(() => {
           const delta = clock.getDelta();
 
@@ -155,8 +150,6 @@
           renderer.render(scene, camera);
 
           controls.update();
-
-          stats.update();
         });
 
         window.addEventListener("resize", () => {
