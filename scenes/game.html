@@ -97,7 +97,7 @@
       const spheres = [];
       let sphereIdx = 0;
 
-      let mouseX, mouseY;
+      // let mouseX, mouseY;
 
       for (let i = 0; i < NUM_SPHERES; i++) {
         const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
@@ -163,6 +163,8 @@
 
       //gyro
 
+      /*
+
       if (window.DeviceOrientationEvent) {
         window.addEventListener(
           "deviceorientation",
@@ -180,7 +182,7 @@
       function deviceOrientationHandler(tiltX, tiltY) {
         mouseX = tiltX;
         mouseY = tiltY;
-      }
+      }*/
 
       //
 
