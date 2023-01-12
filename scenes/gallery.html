@@ -170,7 +170,7 @@
             );
             meshFrame.position.z = -10.0;
             meshFrame.scale.x = (1.1 * image.width) / 200;
-            meshFrame.scale.y = (1.1 * image.height) / 200;
+            meshFrame.scale.y = (1.1 * image.height) / 180;
             zscene.add(meshFrame);
 
             const meshShadow = new THREE.Mesh(
@@ -184,11 +184,11 @@
             meshShadow.position.y = (-1.1 * image.height) / 2;
             meshShadow.position.z = (-1.1 * image.height) / 2;
             meshShadow.rotation.x = -Math.PI / 2;
-            meshShadow.scale.x = (1.1 * image.width) / 1000;
-            meshShadow.scale.y = (1.1 * image.height) / 1000;
+            meshShadow.scale.x = (1.1 * image.width) / 200;
+            meshShadow.scale.y = (1.1 * image.height) / 200;
             zscene.add(meshShadow);
 
-            const floorHeight = (-1.117 * image.height) / 4;
+            const floorHeight = (-1.117 * image.height) / 3.5;
             meshCanvas.position.y = meshCanvas2.position.y = floorHeight;
           }
         };
