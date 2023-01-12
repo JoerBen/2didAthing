@@ -71,9 +71,8 @@ html {
 .homeLink {
   z-index: 100;
   position: fixed;
-  bottom: 0;
-  right: 0;
-  padding: 2em;
+  bottom: 1em;
+  right: 1em;
   text-decoration: none;
   font-weight: 900;
   font-size: 5vh;
@@ -177,7 +176,7 @@ html {
 .title {
   display: none;
 }
-.socialNavigation {
+.leftNavigation {
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -188,15 +187,15 @@ html {
   padding: 2em;
 }
 
-.socialNavigation a {
+.leftNavigation a {
   text-decoration: none;
   font-weight: 900;
   font-size: 5vh;
   text-align: left;
-  color: rgba(255, 255, 255, 1);
+  color: rgba(255, 0, 0, 0.7);
   transition: color 1s ease-in-out;
 }
 
-.socialNavigation a:hover {
-  color: rgba(255, 0, 0, 0.7);
+.leftNavigation a:hover {
+  color: rgba(255, 255, 255, 1);
 }
