@@ -71,7 +71,23 @@ html {
 .homeLink {
   z-index: 100;
   position: fixed;
-  bottom: 1em;
+  top: 1em;
+  left: 1em;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 5vh;
+  text-align: left;
+  color: rgba(255, 255, 255, 1);
+  transition: color 1s ease-in-out;
+}
+
+.homeLink:hover {
+  color: rgba(255, 0, 0, 0.7);
+}
+.artistsLink {
+  z-index: 100;
+  position: fixed;
+  top: 1em;
   right: 1em;
   text-decoration: none;
   font-weight: 900;
@@ -81,7 +97,7 @@ html {
   transition: color 1s ease-in-out;
 }
 
-.homeLink:hover {
+.artistsLink:hover {
   color: rgba(255, 0, 0, 0.7);
 }
 
@@ -176,26 +192,27 @@ html {
 .title {
   display: none;
 }
-.leftNavigation {
+.rightNavigation {
   position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   top: 0;
   bottom: 0;
-  left: 0;
+  right: 0;
   padding: 2em;
+  z-index: 100;
 }
 
-.leftNavigation a {
+.rightNavigation a {
   text-decoration: none;
   font-weight: 900;
   font-size: 5vh;
-  text-align: left;
+  text-align: right;
   color: rgba(255, 0, 0, 0.7);
   transition: color 1s ease-in-out;
 }
 
-.leftNavigation a:hover {
+.rightNavigation a:hover {
   color: rgba(255, 255, 255, 1);
 }

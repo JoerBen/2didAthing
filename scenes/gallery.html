@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>three.js webgl - materials - texture filtering</title>
+    <title>galerie</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -40,6 +40,9 @@
 
   <body>
     <a href="/2media/index.html" class="homeLink"> 2home </a>
+    <a href="https://2media.cz/umelci/vytvarnici/" class="artistsLink"
+      >VÝTVARNÍCI</a
+    >
 
     <!-- Import maps polyfill -->
     <!-- Remove this when import maps will be widely supported -->
@@ -156,8 +159,8 @@
           addPainting(scene2, mesh2);
 
           function addPainting(zscene, zmesh) {
-            zmesh.scale.x = image.width / 500;
-            zmesh.scale.y = image.height / 500;
+            zmesh.scale.x = image.width / 200;
+            zmesh.scale.y = image.height / 200;
 
             zscene.add(zmesh);
 
@@ -166,8 +169,8 @@
               new THREE.MeshBasicMaterial({ color: 0x000000 })
             );
             meshFrame.position.z = -10.0;
-            meshFrame.scale.x = (1.1 * image.width) / 1000;
-            meshFrame.scale.y = (1.1 * image.height) / 1000;
+            meshFrame.scale.x = (1.1 * image.width) / 200;
+            meshFrame.scale.y = (1.1 * image.height) / 200;
             zscene.add(meshFrame);
 
             const meshShadow = new THREE.Mesh(
@@ -185,7 +188,7 @@
             meshShadow.scale.y = (1.1 * image.height) / 1000;
             zscene.add(meshShadow);
 
-            const floorHeight = (-1.117 * image.height) / 10;
+            const floorHeight = (-1.117 * image.height) / 4;
             meshCanvas.position.y = meshCanvas2.position.y = floorHeight;
           }
         };
