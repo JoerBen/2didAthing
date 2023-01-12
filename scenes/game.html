@@ -97,6 +97,8 @@
       const spheres = [];
       let sphereIdx = 0;
 
+      let mouseX, mouseY;
+
       for (let i = 0; i < NUM_SPHERES; i++) {
         const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
         sphere.castShadow = true;
@@ -158,6 +160,29 @@
           camera.rotation.x -= event.movementY / 500;
         }
       });
+
+      //gyro
+
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener(
+          "deviceorientation",
+          function (eventData) {
+            var tiltX = Math.round(eventData.gamma * 2);
+
+            var tiltY = Math.round(eventData.beta * 2);
+
+            deviceOrientationHandler(tiltX, tiltY);
+          },
+          false
+        );
+      }
+
+      function deviceOrientationHandler(tiltX, tiltY) {
+        mouseX = tiltX;
+        mouseY = tiltY;
+      }
+
+      //
 
       window.addEventListener("resize", onWindowResize);
 
