@@ -9,6 +9,23 @@ html {
   background-color: rgb(0, 0, 0);
 }
 
+canvas {
+  position: fixed;
+  z-index: -1;
+}
+
+h1 {
+  font-size: 5em;
+  padding: 0;
+  margin: 0;
+  color: white;
+}
+h3 {
+  font-size: 1.8em;
+  padding: 0;
+  margin: 0;
+}
+
 #info {
   position: fixed;
   top: 20px;
@@ -38,6 +55,29 @@ html {
 }
 
 .navigation a:hover {
+  color: rgba(255, 0, 0, 0.7);
+}
+.navigationBlack {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding: 2em;
+}
+
+.navigationBlack a {
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 5vh;
+  text-align: right;
+  color: rgba(0, 0, 0, 1);
+  transition: color 1s ease-in-out;
+}
+
+.navigationBlack a:hover {
   color: rgba(255, 0, 0, 0.7);
 }
 
@@ -215,4 +255,33 @@ html {
 
 .rightNavigation a:hover {
   color: rgba(255, 255, 255, 1);
+}
+.contactSection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 2em;
+}
+
+.contactSection li {
+  font-size: 1.5em;
+}
+.contactItem {
+  color: rgb(252, 252, 252);
+  transition: color 1s ease-in-out;
+  padding: 0.5em;
+}
+.contactItem:hover {
+  color: rgba(255, 0, 0, 0.7);
+}
+.contactItem a {
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 1.5em;
+  text-align: right;
+  color: rgba(255, 255, 255, 1);
+  transition: color 1s ease-in-out;
+}
+.contactItem a:hover {
+  color: rgba(255, 0, 0, 0.7);
 }
