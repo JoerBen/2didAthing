@@ -20,7 +20,14 @@
       }
 
       a {
-        color: #08f;
+        text-decoration: none;
+        font-size: 1.5em;
+        text-align: right;
+        color: rgba(255, 255, 255, 1);
+        transition: color 1s ease-in-out;
+      }
+      a:hover {
+        color: rgba(255, 0, 0, 0.7);
       }
 
       #content {
@@ -82,7 +89,8 @@
 
     <script type="module">
       import * as THREE from "three";
-
+      import { MTLLoader } from "three/addons/loaders/MTLLoader.js";
+      import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
       import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
       let canvas, renderer;
@@ -95,16 +103,70 @@
       function init() {
         canvas = document.getElementById("c");
 
+        const loader = new OBJLoader();
+
+        loader.load(
+          // resource URL
+          "../assets/objects/2market/book/2market.obj",
+          // called when resource is loaded
+          function (object) {
+            scene.add(object);
+          },
+          // called when loading is in progresses
+          function (xhr) {
+            console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+          },
+          // called when loading has errors
+          function (error) {
+            console.log("An error happened");
+          }
+        );
+
         const geometries = [
-          new THREE.BoxGeometry(1, 1, 1),
+          new THREE.BoxGeometry(0.1, 1, 0.8),
+          new THREE.BoxGeometry(0.01, 1, 1.5),
           new THREE.SphereGeometry(0.5, 12, 8),
+          new THREE.BoxGeometry(0.01, 1, 1.5),
+          new THREE.BoxGeometry(0.1, 1, 0.8),
+          new THREE.BoxGeometry(0.01, 1, 1.5),
+          new THREE.BoxGeometry(0.1, 1, 0.8),
           new THREE.DodecahedronGeometry(0.5),
           new THREE.CylinderGeometry(0.5, 0.5, 1, 12),
         ];
 
+        const linkNames = [
+          "Kniha NA SCHOVÁVANOU",
+          "Michaela Pecháčková a Šimon Bilina",
+          "Balíček 2 knih NA SCHOVÁVANOU",
+          "Michaela Pecháčková",
+          "Kniha NA SCHOVÁVANOU + černé triko",
+          "Šimon Bilina",
+          "Kniha NA SCHOVÁVANOU + bílé triko",
+          "cyklusZeMě - černé Triko",
+          "#8A Joshua District Third Eye Red",
+          "#8E Joshua District Punk Red",
+          "Lazarus - linoryt",
+          "Odidipus - linoryt",
+        ];
+
+        const linkLinks = [
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+          "https://buy.stripe.com/",
+        ];
+
         const content = document.getElementById("content");
 
-        for (let i = 0; i < 40; i++) {
+        for (let i = 0; i < 205; i++) {
           const scene = new THREE.Scene();
 
           // make a list item
@@ -114,8 +176,9 @@
           const sceneElement = document.createElement("div");
           element.appendChild(sceneElement);
 
-          const descriptionElement = document.createElement("div");
-          descriptionElement.innerText = "Produkt " + (i + 1);
+          const descriptionElement = document.createElement("a");
+          descriptionElement.innerText = linkNames[0 + i];
+          descriptionElement.setAttribute("href", linkLinks[0 + i]);
           element.appendChild(descriptionElement);
 
           // the element that represents the area we want to render the scene
@@ -137,7 +200,7 @@
           scene.userData.controls = controls;
 
           // add one random mesh to each scene
-          const geometry = geometries[(geometries.length * Math.random()) | 0];
+          const geometry = geometries[(0 + i) | 0];
 
           const material = new THREE.MeshStandardMaterial({
             color: new THREE.Color().setHSL(Math.random(), 1, 0.75),
@@ -181,7 +244,7 @@
 
         canvas.style.transform = `translateY(${window.scrollY}px)`;
 
-        renderer.setClearColor(0x1a1a1a);
+        renderer.setClearColor(0x232323);
         renderer.setScissorTest(false);
         renderer.clear();
 
@@ -190,7 +253,7 @@
 
         scenes.forEach(function (scene) {
           // so something moves
-          scene.children[0].rotation.y = Date.now() * 0.001;
+          scene.children[0].rotation.y = Date.now() * 0.0005;
 
           // get the element that is a place holder for where we want to
           // draw the scene
