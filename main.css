@@ -241,11 +241,15 @@ h3 {
 }
 .contactItem {
   color: rgb(252, 252, 252);
-  transition: color 1s ease-in-out;
-  padding: 0.5em;
+  transition: color 1s ease-in-out, background 1s ease-in-out;
+  padding: 0.25em;
+  margin: 0.25em;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
 }
 .contactItem:hover {
   color: rgba(255, 0, 0, 0.7);
+  background: rgba(255, 255, 255, 0.1);
 }
 .contactItem a {
   text-decoration: none;
@@ -257,4 +261,25 @@ h3 {
 }
 .contactItem a:hover {
   color: rgba(255, 0, 0, 0.7);
+}
+.contactHome a {
+  bottom: 1em;
+  top: unset;
+  font-size: 25px;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+}
+/*
+  responsive
+*/
+
+@media screen and (max-width: 992px) {
+  .navigationBlack {
+    display: none;
+  }
+  .contactHome a {
+    display: block;
+  }
 }
