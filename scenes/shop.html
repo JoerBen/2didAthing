@@ -93,7 +93,7 @@
       import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
       import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-      let canvas, renderer;
+      let canvas, renderer, scene, object;
 
       const scenes = [];
 
@@ -102,25 +102,6 @@
 
       function init() {
         canvas = document.getElementById("c");
-
-        const loader = new OBJLoader();
-
-        loader.load(
-          // resource URL
-          "../assets/objects/2market/book/2market.obj",
-          // called when resource is loaded
-          function (object) {
-            scene.add(object);
-          },
-          // called when loading is in progresses
-          function (xhr) {
-            console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-          },
-          // called when loading has errors
-          function (error) {
-            console.log("An error happened");
-          }
-        );
 
         const geometries = [
           new THREE.BoxGeometry(0.1, 1, 0.8),
@@ -150,7 +131,7 @@
         ];
 
         const linkLinks = [
-          "https://buy.stripe.com/",
+          "https://buy.stripe.com/3cs15bdbkdhk8Bq6op",
           "https://buy.stripe.com/",
           "https://buy.stripe.com/",
           "https://buy.stripe.com/",
@@ -163,6 +144,10 @@
           "https://buy.stripe.com/",
           "https://buy.stripe.com/",
         ];
+
+        const objectFile = [41, "book/2market.obj"];
+
+        const materialFile = [41, "book/2market.mtl"];
 
         const content = document.getElementById("content");
 
@@ -198,6 +183,32 @@
           controls.enablePan = false;
           controls.enableZoom = false;
           scene.userData.controls = controls;
+
+          const onProgress = function (xhr) {
+            if (xhr.lengthComputable) {
+              const percentComplete = (xhr.loaded / xhr.total) * 100;
+              console.log(Math.round(percentComplete, 2) + "% downloaded");
+            }
+          };
+
+          if (typeof objectFile[0 + i] == "string") {
+            new MTLLoader()
+              .setPath("../assets/objects/2market/")
+              .load(materialFile[0 + i], function (materials) {
+                materials.preload();
+
+                new OBJLoader()
+                  .setMaterials(materials)
+                  .setPath("../assets/objects/2market/")
+                  .load(
+                    objectFile[0 + i],
+                    function (object) {
+                      scene.add(object);
+                    },
+                    onProgress
+                  );
+              });
+          }
 
           // add one random mesh to each scene
           const geometry = geometries[(0 + i) | 0];
