@@ -104,8 +104,8 @@
         canvas = document.getElementById("c");
 
         const geometries = [
-          new THREE.BoxGeometry(0.1, 1, 0.8),
-          new THREE.BoxGeometry(0.01, 1, 1.5),
+          new THREE.BoxGeometry(0.00001, 0.00001, 0.0001),
+          new THREE.BoxGeometry(0, 0, 0),
           new THREE.SphereGeometry(0.5, 12, 8),
           new THREE.BoxGeometry(0.01, 1, 1.5),
           new THREE.BoxGeometry(0.1, 1, 0.8),
@@ -145,9 +145,9 @@
           "https://buy.stripe.com/",
         ];
 
-        const objectFile = [41, "book/2market.obj"];
+        const objectFile = ["book/2market.obj", "book/2market.obj"];
 
-        const materialFile = [41, "book/2market.mtl"];
+        const materialFile = ["book/naSchovavanou.mtl", "book/mpasb.mtl"];
 
         const content = document.getElementById("content");
 
@@ -204,12 +204,12 @@
                     objectFile[0 + i],
                     function (object) {
                       scene.add(object);
+                      object.scale.set(0.7, 0.7, 0.7);
                     },
                     onProgress
                   );
               });
           }
-
           // add one random mesh to each scene
           const geometry = geometries[(0 + i) | 0];
 
