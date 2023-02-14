@@ -3029,7 +3029,7 @@ new Sketch({
     dom: document.getElementById("container")
 });
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","lil-gui":"fkEfG","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./fragment.glsl":"8lpi1","./vertex.glsl":"aZ8DW","gsap":"fPSuC"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","lil-gui":"fkEfG","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./fragment.glsl":"8lpi1","gsap":"fPSuC","./vertex.glsl":"aZ8DW"}],"ktPTu":[function(require,module,exports) {
 /**
  * @license
  * Copyright 2010-2022 Three.js Authors
@@ -34801,9 +34801,6 @@ class MapControls extends OrbitControls {
 },{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8lpi1":[function(require,module,exports) {
 module.exports = "#define GLSLIFY 1\nuniform float time;\nuniform float progress;\nuniform sampler2D texture1;\nuniform vec4 resolution;\nvarying vec2 vUv;\nvarying vec3 vPosition;\nfloat PI = 3.141592653589793238;\nvoid main() {\n    gl_FragColor = vec4(vUv, 1.0,1.);\n}";
 
-},{}],"aZ8DW":[function(require,module,exports) {
-module.exports = "#define GLSLIFY 1\nconst vertexShader = `#version 300 es\nin vec4 vPosition;\nvoid main() {\n	gl_Position = vPosition;\n}\n`;\nexport default vertexShader;";
-
 },{}],"fPSuC":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -38780,6 +38777,9 @@ var CSSPlugin = {
 });
 (0, _gsapCoreJs.gsap).registerPlugin(CSSPlugin);
 
-},{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["1xC6H","95yBy","f8J3X"], "f8J3X", "parcelRequire94c2")
+},{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aZ8DW":[function(require,module,exports) {
+module.exports = "#define GLSLIFY 1\nuniform float time;\nvarying vec2 vUv;\nvarying vec2 vUv1;\nvarying vec4 vPosition;\n\nuniform sampler2D texture1;\nuniform sampler2D texture2;\nuniform vec2 pixels;\nuniform vec2 uvRate1;\n\nvoid main() {\n  vUv = uv;\n\n  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}";
+
+},{}]},["1xC6H","95yBy","f8J3X"], "f8J3X", "parcelRequire94c2")
 
 //# sourceMappingURL=magazine.4f9fc0fa.js.map
