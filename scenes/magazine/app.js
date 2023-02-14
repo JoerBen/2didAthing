@@ -1,9 +1,10 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import fragment from "./fragment.glsl";
 import vertex from "./vertex.glsl";
-import GUI from "three/addons/libs/lil-gui.module.min.js";
+import GUI from 'lil-gui';
+import gsap from "gsap"
 
 export default class Sketch {
   constructor(options) {

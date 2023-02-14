@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width height=device-height">
+    <title>2mag</title>
+    <style>body, html {
+  overscroll-behavior: none;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#container {
+  width: 100vw;
+  height: 100vh;
+  border: 1px solid #ff252580;
+}
+
+canvas {
+  display: block;
+}
+
+</style>
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <script async="" src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://threejs.org/build/three.module.js",
+          "three/addons/": "https://threejs.org/examples/jsm/"
+        }
+      }
+    </script>
+
+    <script src="/magazine.4f9fc0fa.js" defer=""></script>
+  </body>
+</html>
