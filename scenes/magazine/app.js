@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 import fragment from "./fragment.glsl";
 import vertex from "./vertex.glsl";
