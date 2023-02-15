@@ -70,13 +70,18 @@ export default class Sketch {
 
     this.container.appendChild(this.renderer.domElement);
 
-    this.camera = new THREE.PerspectiveCamera(
-      70,
-      window.innerWidth / window.innerHeight,
-      0.001,
-      1000
-    );
-    this.camera.position.set(0, 0, 2);
+    this.renderTarget = new THREE.WebGLRenderTarget(
+      this.width, this.height,
+      {
+        format: THREE.RGBAFormat
+      }
+    )
+
+      let frustrumSize = 3;
+      let aspect = window.innerWidth / window.innerHeight;
+      this.camera = new THREE.OrthographicCamera( frustrumSize * aspect / - 2, frustrumSize * aspect/2, frustrumSize/2, frustrumSize/ -2, -1000, 1000);
+
+    this.camera.position.set(2, 0, 2);
     this.time = 0;
 
     this.isPlaying = true;

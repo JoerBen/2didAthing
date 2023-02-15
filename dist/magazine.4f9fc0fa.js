@@ -3008,8 +3008,13 @@ class Sketch {
         this.renderer.physicallyCorrectLights = true;
         this.renderer.outputEncoding = _three.sRGBEncoding;
         this.container.appendChild(this.renderer.domElement);
-        this.camera = new _three.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.001, 1000);
-        this.camera.position.set(0, 0, 2);
+        this.renderTarget = new _three.WebGLRenderTarget(this.width, this.height, {
+            format: _three.RGBAFormat
+        });
+        let frustrumSize = 3;
+        let aspect = window.innerWidth / window.innerHeight;
+        this.camera = new _three.OrthographicCamera(frustrumSize * aspect / -2, frustrumSize * aspect / 2, frustrumSize / 2, frustrumSize / -2, -1000, 1000);
+        this.camera.position.set(2, 0, 2);
         this.time = 0;
         this.isPlaying = true;
         this.addObjects();
