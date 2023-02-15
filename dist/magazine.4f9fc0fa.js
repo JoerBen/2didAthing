@@ -3022,6 +3022,16 @@ class Sketch {
         document.addEventListener("mousewheel", (e)=>{
             this.scrollTarget = e.wheelDelta * 0.3;
         });
+        document.body.addEventListener("touchmove", touchmove);
+        document.body.addEventListener("touchstart", touchstart);
+        var startX, startY;
+        function touchstart(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        }
+        function touchmove(e) {
+            var deltaX = e.touches[0].clientX - startX, deltaY = e.touches[0].clientY - startY;
+        }
     }
     settings() {
         let that = this;

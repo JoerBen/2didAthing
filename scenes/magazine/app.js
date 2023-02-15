@@ -5,29 +5,50 @@ import vertex from "./vertex.glsl";
 import GUI from "lil-gui";
 import gsap from "gsap";
 
-import img1 from '../../assets/textures/magazine/magazineCovers/1.png'
-import img2 from '../../assets/textures/magazine/magazineCovers/2.png'
-import img3 from '../../assets/textures/magazine/magazineCovers/3.png'
-import img4 from '../../assets/textures/magazine/magazineCovers/4.jpg'
-import img5 from '../../assets/textures/magazine/magazineCovers/5.png'
-import img6 from '../../assets/textures/magazine/magazineCovers/6.png'
-import img7 from '../../assets/textures/magazine/magazineCovers/7.png'
-import img8 from '../../assets/textures/magazine/magazineCovers/8.png'
-import img9 from '../../assets/textures/magazine/magazineCovers/9.png'
-import img10 from '../../assets/textures/magazine/magazineCovers/10.png'
-import img11 from '../../assets/textures/magazine/magazineCovers/11.jpg'
-import img12 from '../../assets/textures/magazine/magazineCovers/12.png'
-import img13 from '../../assets/textures/magazine/magazineCovers/13.png'
-import img14 from '../../assets/textures/magazine/magazineCovers/14.jpg'
-import img15 from '../../assets/textures/magazine/magazineCovers/15.jpg'
-import img16 from '../../assets/textures/magazine/magazineCovers/16.png'
-import img17 from '../../assets/textures/magazine/magazineCovers/17.png'
-import img18 from '../../assets/textures/magazine/magazineCovers/18.png'
-import img19 from '../../assets/textures/magazine/magazineCovers/19.png'
-import img20 from '../../assets/textures/magazine/magazineCovers/20.png'
+import img1 from "../../assets/textures/magazine/magazineCovers/1.png";
+import img2 from "../../assets/textures/magazine/magazineCovers/2.png";
+import img3 from "../../assets/textures/magazine/magazineCovers/3.png";
+import img4 from "../../assets/textures/magazine/magazineCovers/4.jpg";
+import img5 from "../../assets/textures/magazine/magazineCovers/5.png";
+import img6 from "../../assets/textures/magazine/magazineCovers/6.png";
+import img7 from "../../assets/textures/magazine/magazineCovers/7.png";
+import img8 from "../../assets/textures/magazine/magazineCovers/8.png";
+import img9 from "../../assets/textures/magazine/magazineCovers/9.png";
+import img10 from "../../assets/textures/magazine/magazineCovers/10.png";
+import img11 from "../../assets/textures/magazine/magazineCovers/11.jpg";
+import img12 from "../../assets/textures/magazine/magazineCovers/12.png";
+import img13 from "../../assets/textures/magazine/magazineCovers/13.png";
+import img14 from "../../assets/textures/magazine/magazineCovers/14.jpg";
+import img15 from "../../assets/textures/magazine/magazineCovers/15.jpg";
+import img16 from "../../assets/textures/magazine/magazineCovers/16.png";
+import img17 from "../../assets/textures/magazine/magazineCovers/17.png";
+import img18 from "../../assets/textures/magazine/magazineCovers/18.png";
+import img19 from "../../assets/textures/magazine/magazineCovers/19.png";
+import img20 from "../../assets/textures/magazine/magazineCovers/20.png";
 
-const images = [ img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12, img13, img14, img15, img16, img17, img18, img19, img20];
-const textures = images.map(img=>new THREE.TextureLoader().load(img))
+const images = [
+  img1,
+  img2,
+  img3,
+  img4,
+  img5,
+  img6,
+  img7,
+  img8,
+  img9,
+  img10,
+  img11,
+  img12,
+  img13,
+  img14,
+  img15,
+  img16,
+  img17,
+  img18,
+  img19,
+  img20,
+];
+const textures = images.map((img) => new THREE.TextureLoader().load(img));
 
 export default class Sketch {
   constructor(options) {
@@ -71,6 +92,20 @@ export default class Sketch {
     document.addEventListener("mousewheel", (e) => {
       this.scrollTarget = e.wheelDelta * 0.3;
     });
+    document.body.addEventListener("touchmove", touchmove);
+    document.body.addEventListener("touchstart", touchstart);
+
+    var startX, startY;
+
+    function touchstart(e) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }
+
+    function touchmove(e) {
+      var deltaX = e.touches[0].clientX - startX,
+        deltaY = e.touches[0].clientY - startY;
+    }
   }
 
   settings() {
@@ -130,13 +165,12 @@ export default class Sketch {
     this.n = 20;
     for (let i = 0; i < this.n; i++) {
       let mesh = new THREE.Mesh(
-        this.geometry, 
-        
+        this.geometry,
+
         new THREE.MeshBasicMaterial({
-          map: textures[i%textures.length]
+          map: textures[i % textures.length],
         })
-        
-        );
+      );
       this.meshes.push({
         mesh,
         index: i,
