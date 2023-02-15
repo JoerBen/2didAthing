@@ -2930,6 +2930,69 @@ var _lilGui = require("lil-gui");
 var _lilGuiDefault = parcelHelpers.interopDefault(_lilGui);
 var _gsap = require("gsap");
 var _gsapDefault = parcelHelpers.interopDefault(_gsap);
+var _1Png = require("../../assets/textures/magazine/magazineCovers/1.png");
+var _1PngDefault = parcelHelpers.interopDefault(_1Png);
+var _2Png = require("../../assets/textures/magazine/magazineCovers/2.png");
+var _2PngDefault = parcelHelpers.interopDefault(_2Png);
+var _3Png = require("../../assets/textures/magazine/magazineCovers/3.png");
+var _3PngDefault = parcelHelpers.interopDefault(_3Png);
+var _4Jpg = require("../../assets/textures/magazine/magazineCovers/4.jpg");
+var _4JpgDefault = parcelHelpers.interopDefault(_4Jpg);
+var _5Png = require("../../assets/textures/magazine/magazineCovers/5.png");
+var _5PngDefault = parcelHelpers.interopDefault(_5Png);
+var _6Png = require("../../assets/textures/magazine/magazineCovers/6.png");
+var _6PngDefault = parcelHelpers.interopDefault(_6Png);
+var _7Png = require("../../assets/textures/magazine/magazineCovers/7.png");
+var _7PngDefault = parcelHelpers.interopDefault(_7Png);
+var _8Png = require("../../assets/textures/magazine/magazineCovers/8.png");
+var _8PngDefault = parcelHelpers.interopDefault(_8Png);
+var _9Png = require("../../assets/textures/magazine/magazineCovers/9.png");
+var _9PngDefault = parcelHelpers.interopDefault(_9Png);
+var _10Png = require("../../assets/textures/magazine/magazineCovers/10.png");
+var _10PngDefault = parcelHelpers.interopDefault(_10Png);
+var _11Jpg = require("../../assets/textures/magazine/magazineCovers/11.jpg");
+var _11JpgDefault = parcelHelpers.interopDefault(_11Jpg);
+var _12Png = require("../../assets/textures/magazine/magazineCovers/12.png");
+var _12PngDefault = parcelHelpers.interopDefault(_12Png);
+var _13Png = require("../../assets/textures/magazine/magazineCovers/13.png");
+var _13PngDefault = parcelHelpers.interopDefault(_13Png);
+var _14Jpg = require("../../assets/textures/magazine/magazineCovers/14.jpg");
+var _14JpgDefault = parcelHelpers.interopDefault(_14Jpg);
+var _15Jpg = require("../../assets/textures/magazine/magazineCovers/15.jpg");
+var _15JpgDefault = parcelHelpers.interopDefault(_15Jpg);
+var _16Png = require("../../assets/textures/magazine/magazineCovers/16.png");
+var _16PngDefault = parcelHelpers.interopDefault(_16Png);
+var _17Png = require("../../assets/textures/magazine/magazineCovers/17.png");
+var _17PngDefault = parcelHelpers.interopDefault(_17Png);
+var _18Png = require("../../assets/textures/magazine/magazineCovers/18.png");
+var _18PngDefault = parcelHelpers.interopDefault(_18Png);
+var _19Png = require("../../assets/textures/magazine/magazineCovers/19.png");
+var _19PngDefault = parcelHelpers.interopDefault(_19Png);
+var _20Png = require("../../assets/textures/magazine/magazineCovers/20.png");
+var _20PngDefault = parcelHelpers.interopDefault(_20Png);
+const images = [
+    (0, _1PngDefault.default),
+    (0, _2PngDefault.default),
+    (0, _3PngDefault.default),
+    (0, _4JpgDefault.default),
+    (0, _5PngDefault.default),
+    (0, _6PngDefault.default),
+    (0, _7PngDefault.default),
+    (0, _8PngDefault.default),
+    (0, _9PngDefault.default),
+    (0, _10PngDefault.default),
+    (0, _11JpgDefault.default),
+    (0, _12PngDefault.default),
+    (0, _13PngDefault.default),
+    (0, _14JpgDefault.default),
+    (0, _15JpgDefault.default),
+    (0, _16PngDefault.default),
+    (0, _17PngDefault.default),
+    (0, _18PngDefault.default),
+    (0, _19PngDefault.default),
+    (0, _20PngDefault.default)
+];
+const textures = images.map((img)=>new _three.TextureLoader().load(img));
 class Sketch {
     constructor(options){
         this.scene = new _three.Scene();
@@ -2938,20 +3001,28 @@ class Sketch {
         this.height = this.container.offsetHeight;
         this.renderer = new _three.WebGLRenderer();
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.scroll = 0;
+        this.scrollTarget = 0;
+        this.currentScroll = 0;
         this.renderer.setSize(this.width, this.height);
-        this.renderer.setClearColor(0xeeeeee, 1);
+        this.renderer.setClearColor(0x000000, 1);
         this.renderer.physicallyCorrectLights = true;
         this.renderer.outputEncoding = _three.sRGBEncoding;
         this.container.appendChild(this.renderer.domElement);
         this.camera = new _three.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.001, 1000);
         this.camera.position.set(0, 0, 2);
-        this.controls = new (0, _orbitControlsJs.OrbitControls)(this.camera, this.renderer.domElement);
         this.time = 0;
         this.isPlaying = true;
         this.addObjects();
         this.resize();
         this.render();
         this.setupResize();
+        this.scrollEvent();
+    }
+    scrollEvent() {
+        document.addEventListener("mousewheel", (e)=>{
+            this.scrollTarget = e.wheelDelta * 0.3;
+        });
     }
     settings() {
         let that = this;
@@ -3004,21 +3075,34 @@ class Sketch {
             fragmentShader: (0, _fragmentGlslDefault.default)
         });
         this.geometry = new _three.PlaneGeometry(1, 1, 1, 1);
-        this.plane = new _three.Mesh(this.geometry, this.material);
-        this.scene.add(this.plane);
-    }
-    stop() {
-        this.isPlaying = false;
-    }
-    play() {
-        if (!this.isPlaying) {
-            this.isPlaying = true;
-            this.render();
+        this.meshes = [];
+        this.n = 20;
+        for(let i = 0; i < this.n; i++){
+            let mesh = new _three.Mesh(this.geometry, new _three.MeshBasicMaterial({
+                map: textures[i % textures.length]
+            }));
+            this.meshes.push({
+                mesh,
+                index: i
+            });
+            this.scene.add(mesh);
         }
+    }
+    updateMeshes() {
+        this.meshes.forEach((o)=>{
+            this.margin = 1.2;
+            this.wholeWidth = this.n * this.margin;
+            o.mesh.position.x = (this.margin * o.index + this.currentScroll + 314159 * this.wholeWidth) % this.wholeWidth - 2 * this.margin;
+        });
     }
     render() {
         if (!this.isPlaying) return;
         this.time += 0.05;
+        this.scroll += (this.scrollTarget - this.scroll) * 0.1;
+        this.scroll *= 0.9;
+        this.scrollTarget *= 0.9;
+        this.currentScroll += this.scroll * 0.01;
+        this.updateMeshes();
         this.material.uniforms.time.value = this.time;
         requestAnimationFrame(this.render.bind(this));
         this.renderer.render(this.scene, this.camera);
@@ -3029,7 +3113,7 @@ new Sketch({
     dom: document.getElementById("container")
 });
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","lil-gui":"fkEfG","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./fragment.glsl":"8lpi1","gsap":"fPSuC","./vertex.glsl":"aZ8DW"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","lil-gui":"fkEfG","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./fragment.glsl":"8lpi1","gsap":"fPSuC","./vertex.glsl":"aZ8DW","../../assets/textures/magazine/magazineCovers/1.png":"i4iEB","../../assets/textures/magazine/magazineCovers/2.png":"cB3s9","../../assets/textures/magazine/magazineCovers/3.png":"9RHNC","../../assets/textures/magazine/magazineCovers/5.png":"fNNcj","../../assets/textures/magazine/magazineCovers/6.png":"cLHWn","../../assets/textures/magazine/magazineCovers/7.png":"lODJB","../../assets/textures/magazine/magazineCovers/8.png":"hyjot","../../assets/textures/magazine/magazineCovers/9.png":"bnIZ6","../../assets/textures/magazine/magazineCovers/10.png":"9gZmu","../../assets/textures/magazine/magazineCovers/12.png":"85yey","../../assets/textures/magazine/magazineCovers/13.png":"b4dRj","../../assets/textures/magazine/magazineCovers/16.png":"9U17i","../../assets/textures/magazine/magazineCovers/17.png":"kSMmZ","../../assets/textures/magazine/magazineCovers/18.png":"dXYgr","../../assets/textures/magazine/magazineCovers/19.png":"kzYAy","../../assets/textures/magazine/magazineCovers/20.png":"9N7sT","../../assets/textures/magazine/magazineCovers/4.jpg":"5IS6m","../../assets/textures/magazine/magazineCovers/11.jpg":"9RNpY","../../assets/textures/magazine/magazineCovers/14.jpg":"ldgZb","../../assets/textures/magazine/magazineCovers/15.jpg":"gL9hU"}],"ktPTu":[function(require,module,exports) {
 /**
  * @license
  * Copyright 2010-2022 Three.js Authors
@@ -38780,6 +38864,100 @@ var CSSPlugin = {
 },{"./gsap-core.js":"05eeC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aZ8DW":[function(require,module,exports) {
 module.exports = "#define GLSLIFY 1\nuniform float time;\nvarying vec2 vUv;\nvarying vec2 vUv1;\nvarying vec4 vPosition;\n\nuniform sampler2D texture1;\nuniform sampler2D texture2;\nuniform vec2 pixels;\nuniform vec2 uvRate1;\n\nvoid main() {\n  vUv = uv;\n\n  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}";
 
-},{}]},["1xC6H","95yBy","f8J3X"], "f8J3X", "parcelRequire94c2")
+},{}],"i4iEB":[function(require,module,exports) {
+module.exports = require("7aef70ad41069829").getBundleURL("ccrAI") + "1.70ee2e34.png" + "?" + Date.now();
+
+},{"7aef70ad41069829":"lgJ39"}],"lgJ39":[function(require,module,exports) {
+"use strict";
+var bundleURL = {};
+function getBundleURLCached(id) {
+    var value = bundleURL[id];
+    if (!value) {
+        value = getBundleURL();
+        bundleURL[id] = value;
+    }
+    return value;
+}
+function getBundleURL() {
+    try {
+        throw new Error();
+    } catch (err) {
+        var matches = ("" + err.stack).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^)\n]+/g);
+        if (matches) // The first two stack frames will be this function and getBundleURLCached.
+        // Use the 3rd one, which will be a runtime in the original bundle.
+        return getBaseURL(matches[2]);
+    }
+    return "/";
+}
+function getBaseURL(url) {
+    return ("" + url).replace(/^((?:https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/.+)\/[^/]+$/, "$1") + "/";
+} // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
+function getOrigin(url) {
+    var matches = ("" + url).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^/]+/);
+    if (!matches) throw new Error("Origin not found");
+    return matches[0];
+}
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+exports.getOrigin = getOrigin;
+
+},{}],"cB3s9":[function(require,module,exports) {
+module.exports = require("443e229fc475f507").getBundleURL("ccrAI") + "2.1476a186.png" + "?" + Date.now();
+
+},{"443e229fc475f507":"lgJ39"}],"9RHNC":[function(require,module,exports) {
+module.exports = require("763e1c2e2070976").getBundleURL("ccrAI") + "3.4dff25f0.png" + "?" + Date.now();
+
+},{"763e1c2e2070976":"lgJ39"}],"fNNcj":[function(require,module,exports) {
+module.exports = require("a94970e2e3289417").getBundleURL("ccrAI") + "5.000f46a9.png" + "?" + Date.now();
+
+},{"a94970e2e3289417":"lgJ39"}],"cLHWn":[function(require,module,exports) {
+module.exports = require("caef8a0684505457").getBundleURL("ccrAI") + "6.37da91ae.png" + "?" + Date.now();
+
+},{"caef8a0684505457":"lgJ39"}],"lODJB":[function(require,module,exports) {
+module.exports = require("876d44636f789c1b").getBundleURL("ccrAI") + "7.aad38917.png" + "?" + Date.now();
+
+},{"876d44636f789c1b":"lgJ39"}],"hyjot":[function(require,module,exports) {
+module.exports = require("3db71e5b085c8702").getBundleURL("ccrAI") + "8.35e04c0e.png" + "?" + Date.now();
+
+},{"3db71e5b085c8702":"lgJ39"}],"bnIZ6":[function(require,module,exports) {
+module.exports = require("42687f1cc15dcc93").getBundleURL("ccrAI") + "9.5c80e69c.png" + "?" + Date.now();
+
+},{"42687f1cc15dcc93":"lgJ39"}],"9gZmu":[function(require,module,exports) {
+module.exports = require("b957d8587aa2c6be").getBundleURL("ccrAI") + "10.272c237d.png" + "?" + Date.now();
+
+},{"b957d8587aa2c6be":"lgJ39"}],"85yey":[function(require,module,exports) {
+module.exports = require("667fea9780028908").getBundleURL("ccrAI") + "12.b9de3010.png" + "?" + Date.now();
+
+},{"667fea9780028908":"lgJ39"}],"b4dRj":[function(require,module,exports) {
+module.exports = require("4e5e4b2909261986").getBundleURL("ccrAI") + "13.7d771601.png" + "?" + Date.now();
+
+},{"4e5e4b2909261986":"lgJ39"}],"9U17i":[function(require,module,exports) {
+module.exports = require("6c00321f86b96efe").getBundleURL("ccrAI") + "16.c29acacd.png" + "?" + Date.now();
+
+},{"6c00321f86b96efe":"lgJ39"}],"kSMmZ":[function(require,module,exports) {
+module.exports = require("feb3a442f2a1a23a").getBundleURL("ccrAI") + "17.1b3281a4.png" + "?" + Date.now();
+
+},{"feb3a442f2a1a23a":"lgJ39"}],"dXYgr":[function(require,module,exports) {
+module.exports = require("6f5f88e0a4cf93f").getBundleURL("ccrAI") + "18.4a4c82e2.png" + "?" + Date.now();
+
+},{"6f5f88e0a4cf93f":"lgJ39"}],"kzYAy":[function(require,module,exports) {
+module.exports = require("fcd2b2716c12ecf8").getBundleURL("ccrAI") + "19.0d099f85.png" + "?" + Date.now();
+
+},{"fcd2b2716c12ecf8":"lgJ39"}],"9N7sT":[function(require,module,exports) {
+module.exports = require("ac7f1f746662a530").getBundleURL("ccrAI") + "20.772c43df.png" + "?" + Date.now();
+
+},{"ac7f1f746662a530":"lgJ39"}],"5IS6m":[function(require,module,exports) {
+module.exports = require("1fc92ef8f7fe6001").getBundleURL("ccrAI") + "4.e4a7b09b.jpg" + "?" + Date.now();
+
+},{"1fc92ef8f7fe6001":"lgJ39"}],"9RNpY":[function(require,module,exports) {
+module.exports = require("83481c87478ba5c6").getBundleURL("ccrAI") + "11.8623d4c7.jpg" + "?" + Date.now();
+
+},{"83481c87478ba5c6":"lgJ39"}],"ldgZb":[function(require,module,exports) {
+module.exports = require("3db2993410789313").getBundleURL("ccrAI") + "14.46de6e58.jpg" + "?" + Date.now();
+
+},{"3db2993410789313":"lgJ39"}],"gL9hU":[function(require,module,exports) {
+module.exports = require("ecf0c8cec4b77f5c").getBundleURL("ccrAI") + "15.53803e64.jpg" + "?" + Date.now();
+
+},{"ecf0c8cec4b77f5c":"lgJ39"}]},["1xC6H","95yBy","f8J3X"], "f8J3X", "parcelRequire94c2")
 
 //# sourceMappingURL=magazine.4f9fc0fa.js.map
