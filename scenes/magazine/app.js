@@ -57,35 +57,58 @@ export default class Sketch {
     this.container = options.dom;
     this.width = this.container.offsetWidth;
     this.height = this.container.offsetHeight;
-    this.renderer = new THREE.WebGLRenderer();
+    this.renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+    });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     this.scroll = 0;
     this.scrollTarget = 0;
     this.currentScroll = 0;
     this.renderer.setSize(this.width, this.height);
-    this.renderer.setClearColor(0x000000, 1);
+    // this.renderer.setClearColor(0x000000, 1);
     this.renderer.physicallyCorrectLights = true;
     this.renderer.outputEncoding = THREE.sRGBEncoding;
 
     this.container.appendChild(this.renderer.domElement);
 
-    this.renderTarget = new THREE.WebGLRenderTarget(
-      this.width, this.height,
-      {
-        format: THREE.RGBAFormat
-      }
-    )
+    this.renderTarget = new THREE.WebGLRenderTarget(this.width, this.height, {
+      format: THREE.RGBAFormat,
+      magFilter: THREE.NearestFilter,
+      minFilter: THREE.NearestFilter,
+    });
 
-      let frustrumSize = 3;
-      let aspect = window.innerWidth / window.innerHeight;
-      this.camera = new THREE.OrthographicCamera( frustrumSize * aspect / - 2, frustrumSize * aspect/2, frustrumSize/2, frustrumSize/ -2, -1000, 1000);
+    this.renderTarget1 = new THREE.WebGLRenderTarget(this.width, this.height, {
+      format: THREE.RGBAFormat,
+      magFilter: THREE.NearestFilter,
+      minFilter: THREE.NearestFilter,
+    });
+
+    let frustrumSize = 3;
+    let aspect = window.innerWidth / window.innerHeight;
+    this.aspect = this.width / this.height;
+    this.camera = new THREE.OrthographicCamera(
+      (frustrumSize * aspect) / -2,
+      (frustrumSize * aspect) / 2,
+      frustrumSize / 2,
+      frustrumSize / -2,
+      -1000,
+      1000
+    );
 
     this.camera.position.set(2, 0, 2);
     this.time = 0;
 
-    this.isPlaying = true;
+    this.backgroundQuad = new THREE.Mesh(
+      new THREE.PlaneBufferGeometry(4 * this.aspect, 4),
+      this.materialQuad
+    );
+    this.backgroundQuad.position.y = 0.5
+    this.scene.add(this.backgroundQuad);
 
+    this.isPlaying = true;
+    this.initQuad();
     this.addObjects();
     this.resize();
     this.render();
@@ -95,20 +118,30 @@ export default class Sketch {
 
   scrollEvent() {
     document.addEventListener("mousewheel", (e) => {
-      
       this.scrollTarget = e.wheelDelta * 0.3;
     });
 
     document.body.addEventListener("touchmove", (e) => {
-      this.scrollTarget = (e.touches[0].clientX - startX) * 0.05
-      
+      this.scrollTarget = (e.touches[0].clientX - startX) * 0.05;
     });
     let startX;
     document.body.addEventListener("touchstart", (e) => {
       startX = e.touches[0].clientX;
     });
+  }
 
+  initQuad() {
+    this.sceneQuad = new THREE.Scene();
 
+    this.materialQuad = new THREE.MeshBasicMaterial({});
+    this.quad = new THREE.Mesh(
+      new THREE.PlaneBufferGeometry(4 * this.aspect, 4),
+      this.materialQuad
+    );
+
+    this.quad.position.set(2, 0, 0);
+
+    this.sceneQuad.add(this.quad);
   }
 
   settings() {
@@ -204,6 +237,12 @@ export default class Sketch {
     this.updateMeshes();
     this.material.uniforms.time.value = this.time;
     requestAnimationFrame(this.render.bind(this));
+
+    this.renderer.setRenderTarget(this.renderTarget);
+    this.renderer.render(this.scene, this.camera);
+
+    this.renderer.setRenderTarget(null);
+    this.backgroundQuad.map = this.renderTarget.texture;
     this.renderer.render(this.scene, this.camera);
   }
 }

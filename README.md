@@ -48,3 +48,11 @@ https://sirxemic.github.io/jquery.ripples/
 
 https://codesandbox.io/s/interactive-spline-scene-live-html-f79ucc?file=/src/index.js:0-315
 https://codesandbox.io/s/mixing-html-and-webgl-w-occlusion-9keg6?file=/package.json
+
+
+mnimalne 250za hodinu
+je to nekonecne prodluzovani, chce to normlane zacit na tom pracovat, dat to dohromady, jestli si prejete mit stranky takhle, ted to spustime, mne zaplatte 10 000 plus bonus,
+
+protoze mam jenom 7 firem hotovych tak chci 250 kc za hodinu,
+
+bud takto tak prosim 10000 a bonus a uzavreme spolupraci.
