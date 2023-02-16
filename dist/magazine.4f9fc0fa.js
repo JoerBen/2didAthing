@@ -2969,6 +2969,8 @@ var _19Png = require("../../assets/textures/magazine/magazineCovers/19.png");
 var _19PngDefault = parcelHelpers.interopDefault(_19Png);
 var _20Png = require("../../assets/textures/magazine/magazineCovers/20.png");
 var _20PngDefault = parcelHelpers.interopDefault(_20Png);
+var _displaceJpg = require("../../assets/textures/magazine/displace.jpg");
+var _displaceJpgDefault = parcelHelpers.interopDefault(_displaceJpg);
 const images = [
     (0, _1PngDefault.default),
     (0, _2PngDefault.default),
@@ -3007,7 +3009,7 @@ class Sketch {
         this.scrollTarget = 0;
         this.currentScroll = 0;
         this.renderer.setSize(this.width, this.height);
-        // this.renderer.setClearColor(0x000000, 1);
+        this.renderer.setClearColor(0x000000, 1);
         this.renderer.physicallyCorrectLights = true;
         this.renderer.outputEncoding = _three.sRGBEncoding;
         this.container.appendChild(this.renderer.domElement);
@@ -3021,14 +3023,15 @@ class Sketch {
             magFilter: _three.NearestFilter,
             minFilter: _three.NearestFilter
         });
-        let frustrumSize = 3;
+        let frustrumSize = 4;
         let aspect = window.innerWidth / window.innerHeight;
         this.aspect = this.width / this.height;
         this.camera = new _three.OrthographicCamera(frustrumSize * aspect / -2, frustrumSize * aspect / 2, frustrumSize / 2, frustrumSize / -2, -1000, 1000);
         this.camera.position.set(2, 0, 2);
         this.time = 0;
-        this.backgroundQuad = new _three.Mesh(new _three.PlaneBufferGeometry(4 * this.aspect, 4), this.materialQuad);
-        this.backgroundQuad.position.y = 0.5;
+        this.backgroundQuad = new _three.Mesh(new _three.PlaneBufferGeometry(4 * this.aspect, 4), new _three.MeshBasicMaterial({
+        }));
+        this.backgroundQuad.position.set(2, 0, -0.1);
         this.scene.add(this.backgroundQuad);
         this.isPlaying = true;
         this.initQuad();
@@ -3051,8 +3054,39 @@ class Sketch {
         });
     }
     initQuad() {
+        this.materialQuad = new _three.ShaderMaterial({
+            extensions: {
+                derivatives: "#extension GL_OES_standard_derivatives : enable"
+            },
+            side: _three.DoubleSide,
+            uniforms: {
+                time: {
+                    value: 0
+                },
+                uTexture: {
+                    value: null
+                },
+                uDisplace: {
+                    value: new _three.TextureLoader().load((0, _displaceJpgDefault.default))
+                },
+                speed: {
+                    value: 0
+                },
+                dir: {
+                    value: 0
+                },
+                resolution: {
+                    value: new _three.Vector4()
+                }
+            },
+            transparent: true,
+            vertexShader: (0, _vertexGlslDefault.default),
+            fragmentShader: (0, _fragmentGlslDefault.default)
+        });
         this.sceneQuad = new _three.Scene();
-        this.materialQuad = new _three.MeshBasicMaterial({});
+        // this.materialQuad = new THREE.MeshBasicMaterial({
+        //  transparent: true
+        // });
         this.quad = new _three.Mesh(new _three.PlaneBufferGeometry(4 * this.aspect, 4), this.materialQuad);
         this.quad.position.set(2, 0, 0);
         this.sceneQuad.add(this.quad);
@@ -3083,30 +3117,10 @@ class Sketch {
             a1 = 1;
             a2 = this.height / this.width / this.imageAspect;
         }
-        this.material.uniforms.resolution.value.x = this.width;
-        this.material.uniforms.resolution.value.y = this.height;
-        this.material.uniforms.resolution.value.z = a1;
-        this.material.uniforms.resolution.value.w = a2;
         this.camera.updateProjectionMatrix();
     }
     addObjects() {
         let that = this;
-        this.material = new _three.ShaderMaterial({
-            extensions: {
-                derivatives: "#extension GL_OES_standard_derivatives : enable"
-            },
-            side: _three.DoubleSide,
-            uniforms: {
-                time: {
-                    value: 0
-                },
-                resolution: {
-                    value: new _three.Vector4()
-                }
-            },
-            vertexShader: (0, _vertexGlslDefault.default),
-            fragmentShader: (0, _fragmentGlslDefault.default)
-        });
         this.geometry = new _three.PlaneGeometry(1, 1, 1, 1);
         this.meshes = [];
         this.n = 20;
@@ -3114,6 +3128,7 @@ class Sketch {
             let mesh = new _three.Mesh(this.geometry, new _three.MeshBasicMaterial({
                 map: textures[i % textures.length]
             }));
+            //this.mesh.on('click', openUrl(){})
             this.meshes.push({
                 mesh,
                 index: i
@@ -3136,12 +3151,17 @@ class Sketch {
         this.scrollTarget *= 0.9;
         this.currentScroll += this.scroll * 0.01;
         this.updateMeshes();
-        this.material.uniforms.time.value = this.time;
         requestAnimationFrame(this.render.bind(this));
         this.renderer.setRenderTarget(this.renderTarget);
         this.renderer.render(this.scene, this.camera);
+        this.renderer.setRenderTarget(this.renderTarget1);
+        //this.renderer.setRenderTarget(null);
+        this.materialQuad.uniforms.uTexture.value = this.renderTarget.texture;
+        this.materialQuad.uniforms.speed.value = Math.min(0.3, Math.abs(this.scroll));
+        this.materialQuad.uniforms.dir.value = Math.sign(this.scroll);
+        this.renderer.render(this.sceneQuad, this.camera);
         this.renderer.setRenderTarget(null);
-        this.backgroundQuad.map = this.renderTarget.texture;
+        this.backgroundQuad.material.map = this.renderTarget1.texture;
         this.renderer.render(this.scene, this.camera);
     }
 }
@@ -3150,7 +3170,7 @@ new Sketch({
     dom: document.getElementById("container")
 });
 
-},{"three":"ktPTu","./fragment.glsl":"8lpi1","./vertex.glsl":"aZ8DW","lil-gui":"fkEfG","gsap":"fPSuC","../../assets/textures/magazine/magazineCovers/1.png":"i4iEB","../../assets/textures/magazine/magazineCovers/2.png":"cB3s9","../../assets/textures/magazine/magazineCovers/3.png":"9RHNC","../../assets/textures/magazine/magazineCovers/4.jpg":"5IS6m","../../assets/textures/magazine/magazineCovers/5.png":"fNNcj","../../assets/textures/magazine/magazineCovers/6.png":"cLHWn","../../assets/textures/magazine/magazineCovers/7.png":"lODJB","../../assets/textures/magazine/magazineCovers/8.png":"hyjot","../../assets/textures/magazine/magazineCovers/9.png":"bnIZ6","../../assets/textures/magazine/magazineCovers/10.png":"9gZmu","../../assets/textures/magazine/magazineCovers/11.jpg":"9RNpY","../../assets/textures/magazine/magazineCovers/12.png":"85yey","../../assets/textures/magazine/magazineCovers/13.png":"b4dRj","../../assets/textures/magazine/magazineCovers/14.jpg":"ldgZb","../../assets/textures/magazine/magazineCovers/15.jpg":"gL9hU","../../assets/textures/magazine/magazineCovers/16.png":"9U17i","../../assets/textures/magazine/magazineCovers/17.png":"kSMmZ","../../assets/textures/magazine/magazineCovers/18.png":"dXYgr","../../assets/textures/magazine/magazineCovers/19.png":"kzYAy","../../assets/textures/magazine/magazineCovers/20.png":"9N7sT","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","./fragment.glsl":"8lpi1","./vertex.glsl":"aZ8DW","lil-gui":"fkEfG","gsap":"fPSuC","../../assets/textures/magazine/magazineCovers/1.png":"i4iEB","../../assets/textures/magazine/magazineCovers/2.png":"cB3s9","../../assets/textures/magazine/magazineCovers/3.png":"9RHNC","../../assets/textures/magazine/magazineCovers/4.jpg":"5IS6m","../../assets/textures/magazine/magazineCovers/5.png":"fNNcj","../../assets/textures/magazine/magazineCovers/6.png":"cLHWn","../../assets/textures/magazine/magazineCovers/7.png":"lODJB","../../assets/textures/magazine/magazineCovers/8.png":"hyjot","../../assets/textures/magazine/magazineCovers/9.png":"bnIZ6","../../assets/textures/magazine/magazineCovers/10.png":"9gZmu","../../assets/textures/magazine/magazineCovers/11.jpg":"9RNpY","../../assets/textures/magazine/magazineCovers/12.png":"85yey","../../assets/textures/magazine/magazineCovers/13.png":"b4dRj","../../assets/textures/magazine/magazineCovers/14.jpg":"ldgZb","../../assets/textures/magazine/magazineCovers/15.jpg":"gL9hU","../../assets/textures/magazine/magazineCovers/16.png":"9U17i","../../assets/textures/magazine/magazineCovers/17.png":"kSMmZ","../../assets/textures/magazine/magazineCovers/18.png":"dXYgr","../../assets/textures/magazine/magazineCovers/19.png":"kzYAy","../../assets/textures/magazine/magazineCovers/20.png":"9N7sT","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../../assets/textures/magazine/displace.jpg":"4IW2a"}],"ktPTu":[function(require,module,exports) {
 /**
  * @license
  * Copyright 2010-2022 Three.js Authors
@@ -32467,7 +32487,7 @@ exports.export = function(dest, destName, get) {
 };
 
 },{}],"8lpi1":[function(require,module,exports) {
-module.exports = "#define GLSLIFY 1\nuniform float time;\nuniform float progress;\nuniform sampler2D texture1;\nuniform vec4 resolution;\nvarying vec2 vUv;\nvarying vec3 vPosition;\nfloat PI = 3.141592653589793238;\nvoid main() {\n    gl_FragColor = vec4(vUv, 1.0,1.);\n}";
+module.exports = "#define GLSLIFY 1\nuniform float time;\nuniform float progress;\nuniform float speed;\nuniform float dir;\nuniform sampler2D uTexture;\nuniform sampler2D uDisplace;\nuniform vec4 resolution;\nvarying vec2 vUv;\nvarying vec3 vPosition;\nfloat PI = 3.141592653589793238;\nvoid main() {\n    vec4 d = texture2D(uDisplace,(vUv - vec2(0.5))*(1. + speed) + vec2(0.5));\n    float force = pow(length(vUv.x) + 0.5,abs(speed*0.1));\n    vec2 newuv = vUv*cos(1.-force);\n\n    gl_FragColor = (0.1 + 3. * speed)*texture2D(uTexture,newuv + d.xy * 0.001 + vec2(0.,-0.01));\n}";
 
 },{}],"aZ8DW":[function(require,module,exports) {
 module.exports = "#define GLSLIFY 1\nuniform float time;\nvarying vec2 vUv;\nvarying vec2 vUv1;\nvarying vec4 vPosition;\n\nuniform sampler2D texture1;\nuniform sampler2D texture2;\nuniform vec2 pixels;\nuniform vec2 uvRate1;\n\nvoid main() {\n  vUv = uv;\n\n  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}";
@@ -38307,6 +38327,9 @@ module.exports = require("fcd2b2716c12ecf8").getBundleURL("ccrAI") + "19.0d099f8
 },{"fcd2b2716c12ecf8":"lgJ39"}],"9N7sT":[function(require,module,exports) {
 module.exports = require("ac7f1f746662a530").getBundleURL("ccrAI") + "20.772c43df.png" + "?" + Date.now();
 
-},{"ac7f1f746662a530":"lgJ39"}]},["1xC6H","95yBy","f8J3X"], "f8J3X", "parcelRequire94c2")
+},{"ac7f1f746662a530":"lgJ39"}],"4IW2a":[function(require,module,exports) {
+module.exports = require("373192462e19be1e").getBundleURL("ccrAI") + "displace.3103c98b.jpg" + "?" + Date.now();
+
+},{"373192462e19be1e":"lgJ39"}]},["1xC6H","95yBy","f8J3X"], "f8J3X", "parcelRequire94c2")
 
 //# sourceMappingURL=magazine.4f9fc0fa.js.map

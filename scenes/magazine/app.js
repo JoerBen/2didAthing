@@ -26,6 +26,8 @@ import img18 from "../../assets/textures/magazine/magazineCovers/18.png";
 import img19 from "../../assets/textures/magazine/magazineCovers/19.png";
 import img20 from "../../assets/textures/magazine/magazineCovers/20.png";
 
+import displace from "../../assets/textures/magazine/displace.jpg";
+
 const images = [
   img1,
   img2,
@@ -67,7 +69,7 @@ export default class Sketch {
     this.scrollTarget = 0;
     this.currentScroll = 0;
     this.renderer.setSize(this.width, this.height);
-    // this.renderer.setClearColor(0x000000, 1);
+    this.renderer.setClearColor(0x000000, 1);
     this.renderer.physicallyCorrectLights = true;
     this.renderer.outputEncoding = THREE.sRGBEncoding;
 
@@ -85,7 +87,7 @@ export default class Sketch {
       minFilter: THREE.NearestFilter,
     });
 
-    let frustrumSize = 3;
+    let frustrumSize = 4;
     let aspect = window.innerWidth / window.innerHeight;
     this.aspect = this.width / this.height;
     this.camera = new THREE.OrthographicCamera(
@@ -98,13 +100,16 @@ export default class Sketch {
     );
 
     this.camera.position.set(2, 0, 2);
+
     this.time = 0;
 
     this.backgroundQuad = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(4 * this.aspect, 4),
-      this.materialQuad
+      new THREE.MeshBasicMaterial({
+        //transparent: true
+      })
     );
-    this.backgroundQuad.position.y = 0.5
+    this.backgroundQuad.position.set(2, 0, -0.1);
     this.scene.add(this.backgroundQuad);
 
     this.isPlaying = true;
@@ -131,9 +136,29 @@ export default class Sketch {
   }
 
   initQuad() {
+    this.materialQuad = new THREE.ShaderMaterial({
+      extensions: {
+        derivatives: "#extension GL_OES_standard_derivatives : enable",
+      },
+      side: THREE.DoubleSide,
+      uniforms: {
+        time: { value: 0 },
+        uTexture: { value: null },
+        uDisplace: { value: new THREE.TextureLoader().load(displace) },
+        speed: { value: 0 },
+        dir: { value: 0 },
+        resolution: { value: new THREE.Vector4() },
+      },
+      transparent: true,
+      vertexShader: vertex,
+      fragmentShader: fragment,
+    });
+
     this.sceneQuad = new THREE.Scene();
 
-    this.materialQuad = new THREE.MeshBasicMaterial({});
+    // this.materialQuad = new THREE.MeshBasicMaterial({
+    //  transparent: true
+    // });
     this.quad = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(4 * this.aspect, 4),
       this.materialQuad
@@ -173,27 +198,11 @@ export default class Sketch {
       a1 = 1;
       a2 = this.height / this.width / this.imageAspect;
     }
-    this.material.uniforms.resolution.value.x = this.width;
-    this.material.uniforms.resolution.value.y = this.height;
-    this.material.uniforms.resolution.value.z = a1;
-    this.material.uniforms.resolution.value.w = a2;
 
     this.camera.updateProjectionMatrix();
   }
   addObjects() {
     let that = this;
-    this.material = new THREE.ShaderMaterial({
-      extensions: {
-        derivatives: "#extension GL_OES_standard_derivatives : enable",
-      },
-      side: THREE.DoubleSide,
-      uniforms: {
-        time: { value: 0 },
-        resolution: { value: new THREE.Vector4() },
-      },
-      vertexShader: vertex,
-      fragmentShader: fragment,
-    });
 
     this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 
@@ -207,6 +216,7 @@ export default class Sketch {
           map: textures[i % textures.length],
         })
       );
+      //this.mesh.on('click', openUrl(){})
       this.meshes.push({
         mesh,
         index: i,
@@ -235,14 +245,20 @@ export default class Sketch {
     this.scrollTarget *= 0.9;
     this.currentScroll += this.scroll * 0.01;
     this.updateMeshes();
-    this.material.uniforms.time.value = this.time;
     requestAnimationFrame(this.render.bind(this));
 
     this.renderer.setRenderTarget(this.renderTarget);
     this.renderer.render(this.scene, this.camera);
 
+    this.renderer.setRenderTarget(this.renderTarget1);
+    //this.renderer.setRenderTarget(null);
+    this.materialQuad.uniforms.uTexture.value = this.renderTarget.texture;
+    this.materialQuad.uniforms.speed.value = Math.min(0.3, Math.abs(this.scroll));
+    this.materialQuad.uniforms.dir.value = Math.sign(this.scroll);
+    this.renderer.render(this.sceneQuad, this.camera);
+
     this.renderer.setRenderTarget(null);
-    this.backgroundQuad.map = this.renderTarget.texture;
+    this.backgroundQuad.material.map = this.renderTarget1.texture;
     this.renderer.render(this.scene, this.camera);
   }
 }
