@@ -26,7 +26,7 @@ import img18 from "../../assets/textures/magazine/magazineCovers/18.png";
 import img19 from "../../assets/textures/magazine/magazineCovers/19.png";
 import img20 from "../../assets/textures/magazine/magazineCovers/20.png";
 
-import displace from "../../assets/textures/magazine/displace.jpg";
+import displace from "../../assets/textures/magazine/displace3.jpg";
 
 const images = [
   img1,

@@ -2969,8 +2969,8 @@ var _19Png = require("../../assets/textures/magazine/magazineCovers/19.png");
 var _19PngDefault = parcelHelpers.interopDefault(_19Png);
 var _20Png = require("../../assets/textures/magazine/magazineCovers/20.png");
 var _20PngDefault = parcelHelpers.interopDefault(_20Png);
-var _displaceJpg = require("../../assets/textures/magazine/displace.jpg");
-var _displaceJpgDefault = parcelHelpers.interopDefault(_displaceJpg);
+var _displace3Jpg = require("../../assets/textures/magazine/displace3.jpg");
+var _displace3JpgDefault = parcelHelpers.interopDefault(_displace3Jpg);
 const images = [
     (0, _1PngDefault.default),
     (0, _2PngDefault.default),
@@ -3067,7 +3067,7 @@ class Sketch {
                     value: null
                 },
                 uDisplace: {
-                    value: new _three.TextureLoader().load((0, _displaceJpgDefault.default))
+                    value: new _three.TextureLoader().load((0, _displace3JpgDefault.default))
                 },
                 speed: {
                     value: 0
@@ -3170,7 +3170,7 @@ new Sketch({
     dom: document.getElementById("container")
 });
 
-},{"three":"ktPTu","./fragment.glsl":"8lpi1","./vertex.glsl":"aZ8DW","lil-gui":"fkEfG","gsap":"fPSuC","../../assets/textures/magazine/magazineCovers/1.png":"i4iEB","../../assets/textures/magazine/magazineCovers/2.png":"cB3s9","../../assets/textures/magazine/magazineCovers/3.png":"9RHNC","../../assets/textures/magazine/magazineCovers/4.jpg":"5IS6m","../../assets/textures/magazine/magazineCovers/5.png":"fNNcj","../../assets/textures/magazine/magazineCovers/6.png":"cLHWn","../../assets/textures/magazine/magazineCovers/7.png":"lODJB","../../assets/textures/magazine/magazineCovers/8.png":"hyjot","../../assets/textures/magazine/magazineCovers/9.png":"bnIZ6","../../assets/textures/magazine/magazineCovers/10.png":"9gZmu","../../assets/textures/magazine/magazineCovers/11.jpg":"9RNpY","../../assets/textures/magazine/magazineCovers/12.png":"85yey","../../assets/textures/magazine/magazineCovers/13.png":"b4dRj","../../assets/textures/magazine/magazineCovers/14.jpg":"ldgZb","../../assets/textures/magazine/magazineCovers/15.jpg":"gL9hU","../../assets/textures/magazine/magazineCovers/16.png":"9U17i","../../assets/textures/magazine/magazineCovers/17.png":"kSMmZ","../../assets/textures/magazine/magazineCovers/18.png":"dXYgr","../../assets/textures/magazine/magazineCovers/19.png":"kzYAy","../../assets/textures/magazine/magazineCovers/20.png":"9N7sT","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../../assets/textures/magazine/displace.jpg":"4IW2a"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","./fragment.glsl":"8lpi1","./vertex.glsl":"aZ8DW","lil-gui":"fkEfG","gsap":"fPSuC","../../assets/textures/magazine/magazineCovers/1.png":"i4iEB","../../assets/textures/magazine/magazineCovers/2.png":"cB3s9","../../assets/textures/magazine/magazineCovers/3.png":"9RHNC","../../assets/textures/magazine/magazineCovers/4.jpg":"5IS6m","../../assets/textures/magazine/magazineCovers/5.png":"fNNcj","../../assets/textures/magazine/magazineCovers/6.png":"cLHWn","../../assets/textures/magazine/magazineCovers/7.png":"lODJB","../../assets/textures/magazine/magazineCovers/8.png":"hyjot","../../assets/textures/magazine/magazineCovers/9.png":"bnIZ6","../../assets/textures/magazine/magazineCovers/10.png":"9gZmu","../../assets/textures/magazine/magazineCovers/11.jpg":"9RNpY","../../assets/textures/magazine/magazineCovers/12.png":"85yey","../../assets/textures/magazine/magazineCovers/13.png":"b4dRj","../../assets/textures/magazine/magazineCovers/14.jpg":"ldgZb","../../assets/textures/magazine/magazineCovers/15.jpg":"gL9hU","../../assets/textures/magazine/magazineCovers/16.png":"9U17i","../../assets/textures/magazine/magazineCovers/17.png":"kSMmZ","../../assets/textures/magazine/magazineCovers/18.png":"dXYgr","../../assets/textures/magazine/magazineCovers/19.png":"kzYAy","../../assets/textures/magazine/magazineCovers/20.png":"9N7sT","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../../assets/textures/magazine/displace3.jpg":"emEX0"}],"ktPTu":[function(require,module,exports) {
 /**
  * @license
  * Copyright 2010-2022 Three.js Authors
@@ -38327,9 +38327,9 @@ module.exports = require("fcd2b2716c12ecf8").getBundleURL("ccrAI") + "19.0d099f8
 },{"fcd2b2716c12ecf8":"lgJ39"}],"9N7sT":[function(require,module,exports) {
 module.exports = require("ac7f1f746662a530").getBundleURL("ccrAI") + "20.772c43df.png" + "?" + Date.now();
 
-},{"ac7f1f746662a530":"lgJ39"}],"4IW2a":[function(require,module,exports) {
-module.exports = require("373192462e19be1e").getBundleURL("ccrAI") + "displace.3103c98b.jpg" + "?" + Date.now();
+},{"ac7f1f746662a530":"lgJ39"}],"emEX0":[function(require,module,exports) {
+module.exports = require("9f884f9223912a2").getBundleURL("ccrAI") + "displace3.dfadafb3.jpg" + "?" + Date.now();
 
-},{"373192462e19be1e":"lgJ39"}]},["1xC6H","95yBy","f8J3X"], "f8J3X", "parcelRequire94c2")
+},{"9f884f9223912a2":"lgJ39"}]},["1xC6H","95yBy","f8J3X"], "f8J3X", "parcelRequire94c2")
 
 //# sourceMappingURL=magazine.4f9fc0fa.js.map
