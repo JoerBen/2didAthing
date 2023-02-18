@@ -216,7 +216,7 @@ export default class Sketch {
           map: textures[i % textures.length],
         })
       );
-      //this.mesh.on('click', openUrl(){})
+      this.mesh.on('click', window.open('http://www.google.com'))
       this.meshes.push({
         mesh,
         index: i,
