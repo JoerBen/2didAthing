@@ -1,3 +1,4 @@
 node_modules
 scenes/2play/THREE-Multiplayer
 .parcel-cache/
+dist/magazine.html
