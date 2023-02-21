@@ -15,19 +15,20 @@
       }
 
       body {
-        background-color: rgb(24, 24, 24);
-        color: #444;
+        background-color: #d6b454;
+        color: #8d007a;
       }
 
       a {
         text-decoration: none;
         font-size: 1.5em;
         text-align: right;
-        color: rgba(255, 255, 255, 1);
+        color: #2e2200;
+        font-weight: bold;
         transition: color 1s ease-in-out;
       }
       a:hover {
-        color: rgba(255, 0, 0, 0.7);
+        color: rgba(0, 0, 0, 1);
       }
 
       #content {
@@ -35,7 +36,7 @@
         top: 0;
         width: 100%;
         z-index: 1;
-        padding: 3em 0 0 0;
+        padding: 10em 0 0 2em;
       }
 
       #c {
@@ -55,14 +56,22 @@
       .list-item > div:nth-child(1) {
         width: 200px;
         height: 200px;
+        transition: width 1s ease-in-out, height 1s ease-in-out;
       }
-
+      .list-item > div:nth-child(1):hover {
+        width: 250px;
+        height: 250px;
+      }
       .list-item > div:nth-child(2) {
         color: #888;
         font-family: sans-serif;
         font-size: large;
         width: 200px;
         margin-top: 0.5em;
+        transition: width 1s ease-in-out, height 1s ease-in-out;
+      }
+      .list-item > div:nth-child(2):hover {
+        width: 250px;
       }
     </style>
   </head>
@@ -161,9 +170,11 @@
           const sceneElement = document.createElement("div");
           element.appendChild(sceneElement);
 
-          const descriptionElement = document.createElement("a");
-          descriptionElement.innerText = linkNames[0 + i];
-          descriptionElement.setAttribute("href", linkLinks[0 + i]);
+          const descriptionElement = document.createElement("div");
+          const descriptionAElement = document.createElement("a");
+          descriptionAElement.innerText = linkNames[0 + i];
+          descriptionAElement.setAttribute("href", linkLinks[0 + i]);
+          descriptionElement.appendChild(descriptionAElement);
           element.appendChild(descriptionElement);
 
           // the element that represents the area we want to render the scene
@@ -255,11 +266,11 @@
 
         canvas.style.transform = `translateY(${window.scrollY}px)`;
 
-        renderer.setClearColor(0x232323);
+        renderer.setClearColor(0xe4b637);
         renderer.setScissorTest(false);
         renderer.clear();
 
-        renderer.setClearColor(0x232323);
+        renderer.setClearColor(0xd6b454);
         renderer.setScissorTest(true);
 
         scenes.forEach(function (scene) {
