@@ -1,6 +1,6 @@
-# 2media
+# 2didAthing
 
-2media official website
+2didAthing official website
 
 podstranky
 predmety
@@ -26,7 +26,7 @@ requied:
 // git download install
 // v instalacich vse basic a recommended
 //
-// git clone https://github.com/JorikChase/2media.git v terminalu
+// git clone https://github.com/JorikChase/2didAthing.git v terminalu
 //
 // base use
 // alt shift šipka = duplikace radku nebo vybranych radku
